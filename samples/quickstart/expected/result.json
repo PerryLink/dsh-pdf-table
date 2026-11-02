@@ -1,0 +1,45 @@
+{
+  "sample": "samples/quickstart/input/table-demo.pdf",
+  "inspect": {
+    "pages": 1,
+    "chars_per_page": [
+      138
+    ],
+    "total_chars": 138,
+    "has_text_layer": true,
+    "pages_without_text": []
+  },
+  "tables": [
+    {
+      "page": 1,
+      "rows": [
+        [
+          "Region",
+          "Q1 \"units\"",
+          "Q2",
+          "Q3"
+        ],
+        [
+          "North",
+          "120",
+          "135",
+          "150"
+        ],
+        [
+          "South, East",
+          "90",
+          "110",
+          "130"
+        ]
+      ]
+    }
+  ],
+  "table_rows": 3,
+  "csv": {
+    "path": "exports/table-demo.csv",
+    "sha256": "c5826d3772fbb6f710c707f98bce06543735c0ec7d7e84f7f0c84dc3f785335b",
+    "bytes": 71,
+    "rows": 3,
+    "text": "Region,\"Q1 \"\"units\"\"\",Q2,Q3\nNorth,120,135,150\n\"South, East\",90,110,130\n"
+  }
+}

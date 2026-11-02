@@ -1,0 +1,14 @@
+Third-party notices for dsh-pdf-table
+
+Runtime:
+- pdfjs-dist 5.4.394 (Apache-2.0) — Mozilla PDF.js, used to read the PDF text layer.
+  Source: https://github.com/mozilla/pdf.js
+  License: https://github.com/mozilla/pdf.js/blob/master/LICENSE
+
+Development only (not shipped in lib/):
+- pdf-lib 1.17.1 (MIT) — generates the synthetic quickstart PDF and test fixtures.
+- typescript 7.0.2 (Apache-2.0) — build tool.
+- @types/node (MIT) — type declarations.
+- @deepseek-ai/cordis and @deepseek-ai/dsh-tools (MIT) — host plugin/tool contracts.
+
+No customer data is included. All samples and fixtures are synthetic.

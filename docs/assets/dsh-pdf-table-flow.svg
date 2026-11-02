@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="220" viewBox="0 0 920 220" role="img" aria-label="dsh-pdf-table workflow">
+  <rect width="920" height="220" rx="18" fill="#0b1020"/>
+  <g font-family="ui-sans-serif,Segoe UI,Helvetica,Arial,sans-serif" font-size="15" fill="#e8edf7">
+    <rect x="36" y="70" width="196" height="80" rx="14" fill="#141b30" stroke="#6ea8fe" stroke-width="2"/>
+    <text x="134" y="104" text-anchor="middle" font-weight="700">Local PDF</text>
+    <text x="134" y="128" text-anchor="middle" fill="#9fb3d9">text layer only</text>
+
+    <rect x="362" y="70" width="196" height="80" rx="14" fill="#141b30" stroke="#6ea8fe" stroke-width="2"/>
+    <text x="460" y="104" text-anchor="middle" font-weight="700">pdf.tables</text>
+    <text x="460" y="128" text-anchor="middle" fill="#9fb3d9">y rows · x-gap columns</text>
+
+    <rect x="688" y="70" width="196" height="80" rx="14" fill="#141b30" stroke="#3fb950" stroke-width="2"/>
+    <text x="786" y="104" text-anchor="middle" font-weight="700">CSV + sha256</text>
+    <text x="786" y="128" text-anchor="middle" fill="#9fb3d9">$DSH_HOME/dsh-pdf-table</text>
+
+    <path d="M232 110h122M566 110h114" stroke="#6ea8fe" stroke-width="3" stroke-linecap="round"/>
+    <path d="M354 104l12 6-12 6M680 104l12 6-12 6" fill="#6ea8fe"/>
+    <text x="460" y="42" text-anchor="middle" fill="#9fb3d9">scanned PDF? → E_PDF_NO_TEXT_LAYER → OCR first</text>
+    <text x="460" y="190" text-anchor="middle" fill="#9fb3d9">local only · no OCR · no network · no model call</text>
+  </g>
+</svg>

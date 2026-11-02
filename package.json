@@ -1,0 +1,104 @@
+{
+  "name": "dsh-pdf-table",
+  "version": "0.1.0-alpha.1",
+  "description": "Extract text-layer tables from a PDF and export CSV; no OCR, scanned PDFs are not supported.",
+  "type": "module",
+  "main": "./lib/plugin/index.js",
+  "types": "./lib/plugin/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/plugin/index.d.ts",
+      "default": "./lib/plugin/index.js"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "README-zh.md",
+    "TROUBLESHOOTING.md",
+    "LICENSE",
+    "NOTICE",
+    "THIRD-PARTY-NOTICES",
+    "docs/assets",
+    "samples",
+    "screenshots.json",
+    "CHANGELOG.md",
+    "icon.svg"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "demo": {
+      "sample": "samples/quickstart/input/table-demo.pdf",
+      "prompt": "把这个 PDF 里的表格提取成 CSV，保留原来的行列结构。",
+      "expect": "samples/quickstart/expected/result.json",
+      "screenshot": "docs/assets/quickstart.png",
+      "reads": [
+        "用户指定的 PDF（样例：samples/quickstart/input/table-demo.pdf）"
+      ],
+      "writes": [
+        "$DSH_HOME/dsh-pdf-table/"
+      ],
+      "network": false,
+      "external": []
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.3 <0.4.0",
+    "node": ">=24.9.0 <25"
+  },
+  "packageManager": "pnpm@11.28.5",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "node scripts/lint.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm build && node --test test/*.test.mjs",
+    "gate": "node scripts/gate.mjs",
+    "make:sample": "node scripts/make-sample.mjs",
+    "quickstart": "node samples/quickstart/run.mjs --check",
+    "prepublishOnly": "npm run build && node scripts/lint.mjs && node scripts/gate.mjs"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "pdf",
+    "table",
+    "csv",
+    "pdfjs",
+    "perrylink"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-pdf-table.git"
+  },
+  "homepage": "https://perrylink.github.io/dsh-plugins/",
+  "bugs": {
+    "url": "https://github.com/PerryLink/dsh-pdf-table/issues"
+  },
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.5 <5.0.0",
+    "@deepseek-ai/dsh-tools": ">=0.2.1-rc.3 <0.4.0"
+  },
+  "dependencies": {
+    "pdfjs-dist": "5.4.394"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.5",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.3",
+    "@types/node": "^24.0.0",
+    "pdf-lib": "1.17.1",
+    "typescript": "7.0.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    }
+  }
+}

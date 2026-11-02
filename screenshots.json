@@ -1,0 +1,21 @@
+[
+  {
+    "path": "docs/assets/quickstart.png",
+    "kind": "quickstart",
+    "alt": "dsh-pdf-table quickstart terminal output",
+    "caption": "Real command: node samples/quickstart/run.mjs --check — a code-generated text-layer PDF yields a 3x4 table, quoted CSV escaping, and a matching golden result. Rendered from the captured terminal output.",
+    "command": "node samples/quickstart/run.mjs --check",
+    "run_at": "2026-11-02T14:21:08Z",
+    "output_sha256": "7e62cec142a84872a402db255ea3311fbab29ff7e111d8ebdaa30d1ee4b83696",
+    "output_path": "samples/quickstart/expected/result.json",
+    "log": "docs/assets/quickstart.log",
+    "log_sha256": "4a97f8b225d5ab9b527a9bb1c10c067424e5c0016ff9ff8195d6500c1e9494ef",
+    "image_sha256": "f9fe399bf2c33becb9c6e0e5841cd9b809441c6f29b9749921faaa7de225a117"
+  },
+  {
+    "path": "docs/assets/dsh-pdf-table-flow.svg",
+    "kind": "flow",
+    "alt": "dsh-pdf-table workflow diagram",
+    "caption": "Pipeline diagram: local PDF text layer to local CSV; schematic, not test evidence."
+  }
+]

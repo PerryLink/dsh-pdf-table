@@ -1,0 +1,73 @@
+{
+  "run_id": "pdf-table-1793629365056",
+  "scope": "PDF-TABLE-S1",
+  "status": "pass",
+  "counted": false,
+  "note": "synthetic PDFs only; no customer data, no OCR",
+  "metrics": [
+    {
+      "req_id": "PDF-A01",
+      "metric": "inspect pages/chars",
+      "threshold": "pages=1 chars>0",
+      "actual": "pages=1 chars=129",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A02",
+      "metric": "table 3x4",
+      "threshold": "3 rows x 4 cols",
+      "actual": "3 rows x 4 cols",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A03",
+      "metric": "page filter",
+      "threshold": "page 2 only",
+      "actual": "pages=2",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A04",
+      "metric": "CSV quoting",
+      "threshold": "comma+quote escaped",
+      "actual": "escaped",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A05",
+      "metric": "CSV sha256",
+      "threshold": "matches file",
+      "actual": "c5826d3772fb",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A06",
+      "metric": "scanned PDF error",
+      "threshold": "E_PDF_NO_TEXT_LAYER",
+      "actual": "E_PDF_NO_TEXT_LAYER",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A07",
+      "metric": "corrupt PDF error",
+      "threshold": "E_PDF_CORRUPT",
+      "actual": "E_PDF_CORRUPT",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A08",
+      "metric": "empty PDF error",
+      "threshold": "E_PDF_EMPTY",
+      "actual": "E_PDF_EMPTY",
+      "pass": true
+    },
+    {
+      "req_id": "PDF-A09",
+      "metric": "export path safety",
+      "threshold": "traversal rejected",
+      "actual": "E_PDF_PATH_INVALID",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

@@ -1,0 +1,11 @@
+$ node samples/quickstart/run.mjs --check
+dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
+1 page, 138 text chars; text layer yes
+table: 3 rows x 4 columns on page 1
+header: Region | Q1 "units" | Q2 | Q3
+row: North | 120 | 135 | 150
+row: South, East | 90 | 110 | 130
+CSV exports/table-demo.csv: 3 rows, 71 bytes, sha256 c5826d3772fb...
+CSV escaping: comma -> "South, East"; quote -> "Q1 ""units"""
+golden samples/quickstart/expected/result.json matches
+quickstart ok

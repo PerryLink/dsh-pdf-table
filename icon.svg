@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="PDF table">
+  <rect width="128" height="128" rx="28" fill="#0b1020"/>
+  <rect x="10" y="10" width="108" height="108" rx="22" fill="#141b30" stroke="#6ea8fe" stroke-width="3"/>
+  <rect x="28" y="26" width="72" height="76" rx="8" fill="#f4f7ff" opacity="0.96"/>
+  <path d="M28 50h72M28 72h72M52 26v76" stroke="#6ea8fe" stroke-width="4"/>
+  <path d="M40 60l8 8-8 8M62 68h12" stroke="#0b1020" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
