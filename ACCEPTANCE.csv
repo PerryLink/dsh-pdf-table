@@ -1,11 +1,11 @@
 req_id,metric,threshold,actual,script,evidence_sha256,pass,source,counted
-PDF-A01,inspect pages/chars,pages=1 chars>0,pages=1 chars=129,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A02,table 3x4,3 rows x 4 cols,3 rows x 4 cols,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A03,page filter,page 2 only,pages=2,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A04,CSV quoting,comma+quote escaped,escaped,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A05,CSV sha256,matches file,c5826d3772fb,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A06,scanned PDF error,E_PDF_NO_TEXT_LAYER,E_PDF_NO_TEXT_LAYER,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A07,corrupt PDF error,E_PDF_CORRUPT,E_PDF_CORRUPT,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A08,empty PDF error,E_PDF_EMPTY,E_PDF_EMPTY,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
-PDF-A09,export path safety,traversal rejected,E_PDF_PATH_INVALID,scripts/acceptance.mjs,c4b75eea5f7e5c025e271ca58fda3dff618e141429449f42181f77fb3dc3bddc,true,public/synthetic,false
+PDF-A01,inspect pages/chars,pages=1 chars>0,pages=1 chars=129,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A02,table 3x4,3 rows x 4 cols,3 rows x 4 cols,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A03,page filter,page 2 only,pages=2,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A04,CSV quoting,comma+quote escaped,escaped,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A05,CSV sha256,matches file,c5826d3772fb,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A06,scanned PDF error,E_PDF_NO_TEXT_LAYER,E_PDF_NO_TEXT_LAYER,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A07,corrupt PDF error,E_PDF_CORRUPT,E_PDF_CORRUPT,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A08,empty PDF error,E_PDF_EMPTY,E_PDF_EMPTY,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
+PDF-A09,export path safety,traversal rejected,E_PDF_PATH_INVALID,scripts/acceptance.mjs,098dec13d6accbd1c350f2b251403dcd7033d11ef9d96d223c6e30425b51d399,true,public/synthetic,false
 PS1-QS01,quickstart golden,1/1,1,samples/quickstart/run.mjs,7e62cec142a84872a402db255ea3311fbab29ff7e111d8ebdaa30d1ee4b83696,true,synthetic/quickstart,true

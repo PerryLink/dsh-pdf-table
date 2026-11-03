@@ -89,7 +89,7 @@ No. It reads the named PDF, writes only under `$DSH_HOME/dsh-pdf-table/exports/`
 
 ## Version
 
-`0.1.0-alpha.1` · 31 tests pass (`node --test test/*.test.mjs`).
+`0.1.0` · 31 tests pass (`node --test test/*.test.mjs`).
 
 > ⭐ If this helps, a star makes it easier for the next person to find it. Nothing is gated behind it.
 

@@ -1,6 +1,6 @@
 {
   "name": "dsh-pdf-table",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "description": "Extract text-layer tables from a PDF and export CSV; no OCR, scanned PDFs are not supported.",
   "type": "module",
   "main": "./lib/plugin/index.js",
@@ -16,15 +16,12 @@
     "cordis.patch.yml",
     "README.md",
     "README-zh.md",
+    "README-es.md",
+    "README-pt.md",
+    "README-hi.md",
     "TROUBLESHOOTING.md",
-    "LICENSE",
-    "NOTICE",
-    "THIRD-PARTY-NOTICES",
-    "docs/assets",
     "samples",
-    "screenshots.json",
-    "CHANGELOG.md",
-    "icon.svg"
+    "docs/assets"
   ],
   "dsh": {
     "bundle": {
