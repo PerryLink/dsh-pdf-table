@@ -32,24 +32,24 @@ if (demo) {
 }
 
 const files = pkg.files ?? []
-for (const entry of ['samples', 'docs/assets', 'TROUBLESHOOTING.md', 'README-zh.md']) {
+for (const entry of ['samples', 'docs/assets', 'TROUBLESHOOTING.md', 'README.md']) {
   check(files.includes(entry), `files[] must include ${entry}`)
 }
 
-const readmeZh = read('README-zh.md')
-const readme = read('README.md')
+const readmeZh = read('README.md')
+const readme = read('README.en.md')
 const troubleshooting = read('TROUBLESHOOTING.md')
 for (const [label, text, patterns] of [
-  ['README-zh', readmeZh, [/一句话/, /适合[\s\S]*不适合/, /输入/, /输出/, /示例/, /权限/, /^#{2,3}\s*FAQ/m, new RegExp(pkg.version.replace(/\./g, '\\.'))]],
-  ['README', readme, [/一句话|One-liner|What it does/i, /fit/i, /Input/i, /Output/i, /Quick start|Example/i, /Permission/i, /FAQ/i, new RegExp(pkg.version.replace(/\./g, '\\.'))]],
+  ['README', readmeZh, [/它是什么/, /适合[\s\S]*不适合/, /输入/, /输出/, /示例/, /权限/, /^#{2,3}\s*FAQ/m, new RegExp(pkg.version.replace(/\./g, '\\.'))]],
+  ['README.en', readme, [/What it is/i, /fit/i, /Input/i, /Output/i, /Quick start|Example/i, /Permission/i, /FAQ/i, new RegExp(pkg.version.replace(/\./g, '\\.'))]],
 ]) {
   for (const pattern of patterns) check(pattern.test(text), `${label} is missing section matching ${pattern}`)
 }
-check(/读[:：]/.test(readmeZh), 'README-zh must declare 读：')
-check(/写[:：]/.test(readmeZh), 'README-zh must declare 写：')
-check(/联网[:：]/.test(readmeZh), 'README-zh must declare 联网：')
-check(/外部系统[:：]/.test(readmeZh), 'README-zh must declare 外部系统：')
-check(demo?.prompt && readmeZh.includes(demo.prompt.slice(0, 12)), 'README-zh must contain dsh.demo.prompt')
+check(/读[:：]/.test(readmeZh), 'README.md must declare 读：')
+check(/写[:：]/.test(readmeZh), 'README.md must declare 写：')
+check(/联网[:：]/.test(readmeZh), 'README.md must declare 联网：')
+check(/外部系统[:：]/.test(readmeZh), 'README.md must declare 外部系统：')
+check(demo?.prompt && readmeZh.includes(demo.prompt.slice(0, 12)), 'README.md must contain dsh.demo.prompt')
 
 const codeMatches = [...troubleshooting.matchAll(/\bE_PDF_[A-Z0-9_]+\b/g)].map((match) => match[0])
 check(new Set(codeMatches).size >= 3, `TROUBLESHOOTING must list at least 3 E_PDF_* codes, got ${new Set(codeMatches).size}`)
