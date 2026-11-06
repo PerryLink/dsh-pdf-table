@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" role="img" aria-labelledby="ptT ptD">
+<title id="ptT">dsh-pdf-table structure: text items cluster into rows and columns inside the read-only panel, then the CSV text crosses one guarded write seam into the local exports directory</title>
+<desc id="ptD">The R0 read-only panel takes the text items of report.pdf, groups them into rows by y (3pt), splits cells on x gaps above 6pt, clusters cell starts into four columns at 18pt tolerance, drops the single-block prose row, and yields a 3 by 4 rows[y][x] grid. The tail turns down into the R1 write zone: toCsv() produces RFC 4180 quoted text, one guarded seam (filename whitelist, base prefix, realpath) admits it, and the file lands at $DSH_HOME/dsh-pdf-table/exports/ with a sha256 receipt.</desc>
+<defs>
+  <linearGradient id="ptBg" x1="0" y1="0" x2="0.25" y2="1">
+    <stop offset="0" stop-color="#131a2a"/>
+    <stop offset="1" stop-color="#0c1016"/>
+  </linearGradient>
+  <filter id="ptSoft" x="-25%" y="-25%" width="155%" height="170%">
+    <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1b1735" flood-opacity="0.55"/>
+  </filter>
+  <pattern id="ptDots" width="26" height="26" patternUnits="userSpaceOnUse">
+    <circle cx="1.3" cy="1.3" r="1.3" fill="#1e2636"/>
+  </pattern>
+</defs>
+<rect width="1100" height="660" rx="22" fill="url(#ptBg)"/>
+<rect width="1100" height="660" rx="22" fill="url(#ptDots)" opacity=".55"/>
+
+<text x="44" y="58" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="30" font-weight="700">dsh-pdf-table</text>
+<text x="44" y="88" fill="#a8b1c4" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="15">PDF text layer → coordinate grid → RFC 4180 CSV · local only · no OCR · no model call</text>
+<text x="1056" y="50" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" text-anchor="end">R0 read-only ×2 · R1 local write ×1</text>
+<text x="1056" y="72" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12.5" text-anchor="end">pdfjs-dist 5.4.394 · Node ≥24.9</text>
+<line x1="44" y1="100" x2="1056" y2="100" stroke="#1e2636" stroke-width="1.4"/>
+<g filter="url(#ptSoft)"><rect x="204" y="104" width="860" height="272" rx="22" fill="#1b2231" stroke="#2e374b" stroke-width="1.5"/></g>
+<rect x="220" y="92" width="128" height="26" rx="13" fill="#242d42" stroke="#8496f5" stroke-width="1.3"/>
+<text x="284" y="110" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="700" text-anchor="middle">R0 · read-only</text>
+<text x="220" y="142" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12">pdf.tables · items → rows (Δy ≤3pt) → cells (Δx &gt;6pt) → columns (18pt tol)</text>
+<text x="36" y="122" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">report.pdf</text>
+<text x="36" y="141" fill="#737b8d" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11">table-demo.pdf · 1 page</text>
+<g filter="url(#ptSoft)"><rect x="36" y="154" width="152" height="188" rx="8" fill="#1b2231" stroke="#2e374b" stroke-width="1.4"/></g>
+<rect x="48" y="174" width="26" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="80" y="174" width="30" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="114" y="174" width="22" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="148" y="174" width="26" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="48" y="200" width="22" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="76" y="200" width="34" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="116" y="200" width="20" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="144" y="200" width="30" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="48" y="226" width="30" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="84" y="226" width="24" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="114" y="226" width="30" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="48" y="252" width="24" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="78" y="252" width="28" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="112" y="252" width="24" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="142" y="252" width="30" height="7" rx="3.5" fill="#737b8d" opacity=".55"/>
+<rect x="48" y="300" width="128" height="7" rx="3.5" fill="#737b8d" opacity=".3"/>
+<text x="36" y="362" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700">pdf.inspect</text>
+<text x="36" y="380" fill="#737b8d" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11">text layer: yes · 138 chars</text>
+<line x1="256" y1="326" x2="256" y2="170" stroke="#2e374b" stroke-width="1.4"/>
+<path d="M256 162l-4 8h8z" fill="#2e374b"/>
+<line x1="256" y1="326" x2="612" y2="326" stroke="#2e374b" stroke-width="1.4"/>
+<path d="M620 326l-8 -4v8z" fill="#2e374b"/>
+<text x="256" y="158" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" text-anchor="middle">y</text>
+<text x="626" y="330" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12">x</text>
+<line x1="300" y1="186" x2="300" y2="296" stroke="#8496f5" stroke-width="1" stroke-dasharray="4 5" opacity=".35"/>
+<text x="300" y="344" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">C1</text>
+<line x1="380" y1="186" x2="380" y2="296" stroke="#8496f5" stroke-width="1" stroke-dasharray="4 5" opacity=".35"/>
+<text x="380" y="344" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">C2</text>
+<line x1="460" y1="186" x2="460" y2="296" stroke="#8496f5" stroke-width="1" stroke-dasharray="4 5" opacity=".35"/>
+<text x="460" y="344" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">C3</text>
+<line x1="540" y1="186" x2="540" y2="296" stroke="#8496f5" stroke-width="1" stroke-dasharray="4 5" opacity=".35"/>
+<text x="540" y="344" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">C4</text>
+<text x="252" y="202" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="end">R1</text>
+<rect x="300" y="196" width="34" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="380" y="196" width="44" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="460" y="196" width="28" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="540" y="196" width="26" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<text x="252" y="232" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="end">R2</text>
+<rect x="300" y="226" width="30" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="380" y="226" width="40" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="460" y="226" width="32" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="540" y="226" width="24" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<text x="252" y="262" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="end">R3</text>
+<rect x="300" y="256" width="36" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="380" y="256" width="30" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="460" y="256" width="34" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<text x="252" y="292" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="end">R4</text>
+<rect x="300" y="286" width="28" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="380" y="286" width="42" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="460" y="286" width="30" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="540" y="286" width="28" height="8" rx="4" fill="#8496f5" opacity=".72"/>
+<rect x="296" y="298" width="212" height="20" rx="7" fill="none" stroke="#fbbf24" stroke-width="1.4" stroke-dasharray="5 4"/>
+<rect x="300" y="304" width="196" height="8" rx="4" fill="#737b8d" opacity=".45"/>
+<text x="516" y="313" fill="#fbbf24" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">1 block → dropped</text>
+<path d="M300 178 V170 H380 V178" fill="none" stroke="#8496f5" stroke-width="1.3"/>
+<text x="340" y="166" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">18pt</text>
+<path d="M330 236 H380" stroke="#8496f5" stroke-width="1.2" stroke-dasharray="3 3" opacity=".7"/>
+<path d="M330 232v8M380 232v8" stroke="#8496f5" stroke-width="1.2" opacity=".7"/>
+<text x="355" y="228" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="middle">&gt;6pt</text>
+<text x="220" y="366" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">Δy ≤3pt → row · Δx &gt;6pt → cell · column start 18pt</text>
+<line x1="640" y1="152" x2="640" y2="226" stroke="#2e374b" stroke-width="1.2" stroke-dasharray="3 5"/>
+<line x1="640" y1="274" x2="640" y2="356" stroke="#2e374b" stroke-width="1.2" stroke-dasharray="3 5"/>
+<path d="M632 250h18" stroke="#8496f5" stroke-width="2" stroke-linecap="round"/>
+<path d="M656 250l-10 -5v10z" fill="#8496f5"/>
+<text x="656" y="172" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">rows[y][x]</text>
+<text x="1046" y="172" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" text-anchor="end">3 × 4</text>
+<rect x="656" y="182" width="390" height="34" fill="#1f2740" opacity=".8"/>
+<line x1="656.0" y1="182" x2="656.0" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="753.5" y1="182" x2="753.5" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="851.0" y1="182" x2="851.0" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="948.5" y1="182" x2="948.5" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="1046.0" y1="182" x2="1046.0" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="656" y1="182" x2="1046" y2="182" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="656" y1="216" x2="1046" y2="216" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="656" y1="250" x2="1046" y2="250" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="656" y1="284" x2="1046" y2="284" stroke="#1e2636" stroke-width="1.1"/>
+<line x1="656" y1="318" x2="1046" y2="318" stroke="#1e2636" stroke-width="1.1"/>
+<text x="663.0" y="203.5" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">Region</text>
+<text x="760.5" y="203.5" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">Q1 "units"</text>
+<text x="858.0" y="203.5" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">Q2</text>
+<text x="955.5" y="203.5" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">Q3</text>
+<text x="663.0" y="237.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">North</text>
+<text x="760.5" y="237.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">120</text>
+<text x="858.0" y="237.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">135</text>
+<text x="955.5" y="237.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">150</text>
+<text x="663.0" y="271.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">South, East</text>
+<text x="760.5" y="271.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">90</text>
+<text x="858.0" y="271.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">110</text>
+<text x="955.5" y="271.5" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">130</text>
+<rect x="656" y="334" width="390" height="26" rx="8" fill="none" stroke="#fbbf24" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="668" y="352" fill="#fbbf24" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">1 text block → prose · dropped</text>
+<rect x="28" y="412" width="680" height="224" rx="24" fill="#171e2d" stroke="#8496f5" stroke-width="1.5" stroke-dasharray="7 6" opacity=".95"/>
+<rect x="44" y="400" width="144" height="26" rx="13" fill="#242d42" stroke="#8496f5" stroke-width="1.3"/>
+<text x="116" y="418" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="700" text-anchor="middle">R1 · local write</text>
+<g filter="url(#ptSoft)"><rect x="44" y="428" width="348" height="192" rx="18" fill="#1b2231" stroke="#8496f5" stroke-width="1.6"/></g>
+<text x="62" y="456" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">exports/ · file on disk</text>
+<text x="62" y="482" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">$DSH_HOME/dsh-pdf-table/exports/</text>
+<text x="62" y="504" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">pdf-tables-c5826d3772fb.csv</text>
+<line x1="62" y1="518" x2="374" y2="518" stroke="#1e2636" stroke-width="1.1"/>
+<text x="62" y="542" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">sha256 c5826d3772fb… · 3 rows</text>
+<text x="62" y="564" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">71 bytes · pages [1]</text>
+<text x="62" y="592" fill="#3fb950" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11">source PDF untouched</text>
+<circle cx="352" cy="590" r="10" fill="none" stroke="#3fb950" stroke-width="1.8"/>
+<path d="M347 590l4 5 7 -9" fill="none" stroke="#3fb950" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<g filter="url(#ptSoft)"><rect x="420" y="428" width="272" height="192" rx="18" fill="#1b2231" stroke="#2e374b" stroke-width="1.5"/></g>
+<text x="438" y="456" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">safeExportPath</text>
+<circle cx="443" cy="478" r="4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<path d="M441 478l2 2.4 3.4 -4.4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<text x="454" y="482" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">[A-Za-z0-9._-]{1,120}</text>
+<circle cx="443" cy="502" r="4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<path d="M441 502l2 2.4 3.4 -4.4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<text x="454" y="506" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">resolve(base) + sep</text>
+<circle cx="443" cy="526" r="4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<path d="M441 526l2 2.4 3.4 -4.4" fill="none" stroke="#3fb950" stroke-width="1.4"/>
+<text x="454" y="530" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">realpath(base) + /</text>
+<line x1="438" y1="548" x2="674" y2="548" stroke="#1e2636" stroke-width="1.1"/>
+<text x="438" y="570" fill="#f87171" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11">unsafe name → E_PDF_PATH_INVALID</text>
+<text x="438" y="592" fill="#f87171" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11">../x.csv → E_PDF_PATH_NOT_ALLOWED</text>
+<g filter="url(#ptSoft)"><rect x="724" y="412" width="340" height="224" rx="20" fill="#1b2231" stroke="#2e374b" stroke-width="1.5"/></g>
+<text x="742" y="442" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">toCsv() · RFC 4180</text>
+<rect x="990" y="426" width="58" height="22" rx="11" fill="#242d42"/>
+<text x="1019" y="441" fill="#8496f5" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10.5" text-anchor="middle">quoted</text>
+<text x="742" y="462" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">pdf.to_csv · builds the text</text>
+<text x="742" y="492" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">Region,"Q1 ""units""",Q2,Q3</text>
+<text x="742" y="518" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">North,120,135,150</text>
+<text x="742" y="544" fill="#f0f3f9" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">"South, East",90,110,130</text>
+<line x1="742" y1="556" x2="1046" y2="556" stroke="#1e2636" stroke-width="1.1"/>
+<text x="742" y="578" fill="#a8b1c4" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">, → "…"   ·   " → ""</text>
+<text x="742" y="600" fill="#737b8d" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5">3 rows · 4 cols · 71 bytes</text>
+<path d="M192 248H198" stroke="#8496f5" stroke-width="2"/>
+<path d="M204 248l-8 -5v10z" fill="#8496f5"/>
+<path d="M890 378V402" stroke="#8496f5" stroke-width="2" stroke-linecap="round"/>
+<path d="M890 412l-5 -10h10z" fill="#8496f5"/>
+<path d="M722 524H700" stroke="#8496f5" stroke-width="2"/>
+<path d="M692 524l10 -5v10z" fill="#8496f5"/>
+<path d="M418 524H400" stroke="#8496f5" stroke-width="2"/>
+<path d="M392 524l10 -5v10z" fill="#8496f5"/>
+<text x="44" y="650" fill="#737b8d" font-family="Microsoft YaHei, Segoe UI, ui-sans-serif, system-ui, sans-serif" font-size="11.5">scanned PDF → E_PDF_NO_TEXT_LAYER → OCR first · rows with one text block are dropped as prose · short rows padded with empty cells · original PDF read-only</text>
+</svg>

@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-dark.svg">
-  <img src="docs/assets/dsh-pdf-table-flow-light.svg" width="100%" alt="dsh-pdf-table प्रवाह: स्थानीय PDF → pdf.inspect (R0) → pdf.tables (R0) → pdf.to_csv (R1) → $DSH_HOME/dsh-pdf-table/exports/; कोई OCR नहीं, कोई नेटवर्क नहीं, कोई मॉडल कॉल नहीं, मूल PDF केवल पढ़ने के लिए">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-hero-en-dark.webp">
+  <img src="docs/assets/dsh-pdf-table-hero-en-light.webp" width="100%" alt="dsh-pdf-table: PDF की टेक्स्ट-लेयर को पंक्तियों और स्तंभों में बदलकर ऐसा CSV निर्यात करता है जिसे सेल-दर-सेल जाँचा जा सके; दाईं ओर y/x अक्षों पर नमूना 3x4 तालिका, कोट में लिया &quot;South, East&quot; सेल और CSV रसीद (sha256 c5826d3772fb...) है">
 </picture>
 
 # dsh-pdf-table
@@ -35,6 +35,11 @@ dsh plugin --profile <profile> add dsh-pdf-table
 ## यह क्या है
 
 एक वाक्य में: यह स्थानीय PDF की **टेक्स्ट-लेयर** पढ़ता है, टेक्स्ट आइटम के निर्देशांकों से तालिका को फिर से पंक्तियों और स्तंभों में बनाता है, और RFC 4180 कोट-एस्केपिंग वाला CSV निर्यात करता है। यह OCR नहीं करता, लेआउट विश्लेषण नहीं करता, फ़ॉन्ट या बॉर्डर नहीं बनाता और आपके लिए राशि या इकाई की जाँच नहीं करता — यह केवल «एक पृष्ठ पर पंक्तियों-स्तंभों में रखे टेक्स्ट» को «ऐसे CSV» में बदलता है जिसे कोई दूसरा व्यक्ति जाँच सके।
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-pdf-table-flow-v5-light.svg" width="100%" alt="dsh-pdf-table संरचना (निर्देशांक-क्षेत्र पर R0/R1 दो-पक्षीय सीमा): R0 केवल-पढ़ने वाले पैनल में report.pdf के टेक्स्ट आइटम y<=3pt पर पंक्तियों में समूहित होते हैं, x>6pt के अंतर पर सेल बनते हैं और उनके आरंभ 18pt सहनशीलता पर C1-C4 स्तंभों में समूहित होते हैं; छोटी पंक्तियाँ खाली स्ट्रिंग से भरती हैं और एक-ब्लॉक पंक्ति गद्य मानकर छोड़ दी जाती है, जिससे 3x4 का rows[y][x] ग्रिड बनता है। toCsv() RFC 4180 कोट एस्केप लगाता है, टेक्स्ट R1 लेखन-सीमा पार करके safeExportPath (फ़ाइलनाम श्वेतसूची + realpath) से $DSH_HOME/dsh-pdf-table/exports/ तक जाता है और sha256 रसीद लौटाता है">
+</picture>
 
 - **उपयुक्त:** Word, Excel या रिपोर्ट जनरेटर से निकले वे PDF जिनमें वास्तविक टेक्स्ट-लेयर हो; प्रति पृष्ठ एक तालिका, या वे पृष्ठ जिनका स्तंभ ढाँचा एक जैसा हो; तालिका को CSV में ले जाकर मिलान, लोड या अभिलेखन करना।
 - **अनुपयुक्त:** स्कैन, फ़ोटो और केवल-छवि वाले PDF (टेक्स्ट-लेयर नहीं); मर्ज किए गए सेल, पृष्ठों के पार जाने वाले सेल, घुमाए गए पृष्ठ, तालिकाओं के साथ मिली दो-स्तंभी गद्य; फ़ॉन्ट, रंग, बॉर्डर या सूत्रों का लेआउट पुनर्निर्माण; राशि या इकाई की मानवीय जाँच को बदलना।
@@ -339,7 +344,7 @@ node scripts/gate.mjs
 | `samples/quickstart/` | कृत्रिम PDF, गोल्डन `expected/result.json` और दोबारा चलाने की स्क्रिप्ट |
 | `docs/assets/` | आरेख और वास्तविक टर्मिनल आउटपुट (`quickstart.png` / `quickstart.log`) |
 
-शुरुआती हीरो [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से बनता है (Python मानक लाइब्रेरी, शुद्ध SVG, कमांड-टोकन टेक्स्ट, हल्का/गहरा जोड़ा) और दोबारा चलाया जा सकता है: `python scripts/gen-readme-assets.py`। `docs/assets/quickstart.png` वास्तविक रन का स्क्रीनशॉट है और `docs/assets/quickstart.log` के साथ रखा जाता है; पुराना एकल-थीम `docs/assets/dsh-pdf-table-flow.svg` इसलिए रखा गया है कि पुराने लिंक 404 न हों, जबकि README हल्का/गहरा जोड़ा इस्तेमाल करता है।
+शुरुआती हीरो और «यह क्या है» वाला संरचना-चित्र दोनों [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से बनते हैं: हीरो Pillow से `docs/assets/dsh-pdf-table-hero-{zh,en}-{light,dark}.webp` (1440×576) में बनता है, और संरचना-चित्र हाथ से लिखे SVG के रूप में `docs/assets/dsh-pdf-table-flow-v5-{light,dark}.svg` (1100×660, केवल कमांड टोकन, पाँचों भाषाओं के लिए साझा) में। दोबारा चलाने के लिए: `python scripts/gen-readme-assets.py` (फ़ॉन्ट न मिले या कोई लेबल अपने बॉक्स में न बैठे तो यह रुक जाता है)। `docs/assets/quickstart.png` वास्तविक रन का स्क्रीनशॉट है और `docs/assets/quickstart.log` के साथ रखा जाता है; पुराना `docs/assets/dsh-pdf-table-flow.svg` और उसका हल्का/गहरा जोड़ा इसलिए रखे गए हैं कि पुराने लिंक 404 न हों, जबकि README अब हीरो और flow-v5 इस्तेमाल करता है।
 
 Topics: `dsh`, `dsh-plugin`, `deepseek-harness`, `deepseek`, `pdf`, `table`, `csv`, `pdfjs`, `perrylink`
 

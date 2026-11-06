@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-dark.svg">
-  <img src="docs/assets/dsh-pdf-table-flow-light.svg" width="100%" alt="dsh-pdf-table 流程：本地 PDF → pdf.inspect（R0）→ pdf.tables（R0）→ pdf.to_csv（R1）→ $DSH_HOME/dsh-pdf-table/exports/；不做 OCR、不联网、不调用模型，原 PDF 只读">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-pdf-table-hero-zh-light.webp" width="100%" alt="dsh-pdf-table：把带文本层的 PDF 按坐标还原成行列，导出可逐格核对的 CSV；右侧是样例表 3×4（带 y/x 坐标刻度与「South, East」引号高亮）与 CSV 回执（sha256 c5826d3772fb…）">
 </picture>
 
 # dsh-pdf-table
@@ -35,6 +35,11 @@ dsh plugin --profile <profile> add dsh-pdf-table
 ## 它是什么
 
 一句话：读本地 PDF 的**文本层**，按文本项坐标把表格还原成行和列，再导出成 RFC 4180 带引号转义的 CSV。它不做 OCR、不做版面分析、不还原字体颜色边框，也不会替你核对金额和单位——它只负责把「同一页上按行列排布的文字」变成「一张能被别人复核的 CSV」。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-pdf-table-flow-v5-light.svg" width="100%" alt="dsh-pdf-table 结构图（R0/R1 双区边界 + 坐标场）：R0 只读区里 report.pdf 的文本项按 y≤3pt 成行、x 间隔>6pt 分格、列起点按 18pt 容差聚成 C1–C4，短行补空串，只含一个文本块的行按正文丢弃，得到 rows[y][x] 3×4；toCsv() 做 RFC 4180 引号转义，文本越过 R1 写边界，经 safeExportPath（文件名白名单 + realpath 复核）落到 $DSH_HOME/dsh-pdf-table/exports/ 并返回 sha256 回执">
+</picture>
 
 - **适合**：由 Word / Excel / 报表工具导出的、带真实文本层的 PDF；一页一张表，或各页列结构一致的表；需要把表格落到 CSV 再做核对、入库或留档的场景。
 - **不适合**：扫描件、拍照件、纯图片 PDF（没有文本层）；合并单元格、跨页跨行单元格、旋转页面、双栏/多栏正文混排；需要还原字体、颜色、边框或公式的版式分析；替代人工核对金额/单位。
@@ -337,7 +342,7 @@ node scripts/gate.mjs
 | `samples/quickstart/` | 合成 PDF、金标 `expected/result.json` 与复跑脚本 |
 | `docs/assets/` | 配图与真实终端输出（`quickstart.png` / `quickstart.log`） |
 
-开头 hero 由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成（Python 标准库，纯 SVG、命令 token 文案、深浅双版），可重复执行：`python scripts/gen-readme-assets.py`。`docs/assets/quickstart.png` 是真实运行截图，配合 `docs/assets/quickstart.log` 保留；旧的单版 `docs/assets/dsh-pdf-table-flow.svg` 保留不删（避免外链 404），README 已改用深浅双版。
+开头 hero 与「它是什么」里的结构图都由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成：hero 用 Pillow 画成 `docs/assets/dsh-pdf-table-hero-{zh,en}-{light,dark}.webp`（1440×576），结构图用手写 SVG 画成 `docs/assets/dsh-pdf-table-flow-v5-{light,dark}.svg`（1100×660，图内只放命令 token，五语共用）；可重复执行：`python scripts/gen-readme-assets.py`（缺字体即报错退出，文字放不进盒子也会中止）。`docs/assets/quickstart.png` 是真实运行截图，配合 `docs/assets/quickstart.log` 保留；旧的 `docs/assets/dsh-pdf-table-flow.svg` 与 `dsh-pdf-table-flow-{light,dark}.svg` 保留不删（避免外链 404），README 已改用 hero + flow-v5。
 
 Topics：`dsh`、`dsh-plugin`、`deepseek-harness`、`deepseek`、`pdf`、`table`、`csv`、`pdfjs`、`perrylink`
 

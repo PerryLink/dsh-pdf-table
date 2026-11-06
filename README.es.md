@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-dark.svg">
-  <img src="docs/assets/dsh-pdf-table-flow-light.svg" width="100%" alt="Flujo de dsh-pdf-table: PDF local → pdf.inspect (R0) → pdf.tables (R0) → pdf.to_csv (R1) → $DSH_HOME/dsh-pdf-table/exports/; sin OCR, sin red, sin llamada al modelo y el PDF original no se modifica">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-hero-en-dark.webp">
+  <img src="docs/assets/dsh-pdf-table-hero-en-light.webp" width="100%" alt="dsh-pdf-table: convierte la capa de texto de un PDF en filas y columnas y exporta un CSV que se puede revisar celda por celda; a la derecha, la tabla de ejemplo 3x4 sobre ejes y/x con la celda &quot;South, East&quot; entrecomillada marcada, y el recibo CSV (sha256 c5826d3772fb...)">
 </picture>
 
 # dsh-pdf-table
@@ -35,6 +35,11 @@ dsh plugin --profile <profile> add dsh-pdf-table
 ## Qué es
 
 En una frase: lee la **capa de texto** de un PDF local, reconstruye la tabla a partir de las coordenadas de los fragmentos de texto y exporta un CSV con entrecomillado RFC 4180. No hace OCR, no analiza el diseño de página, no reconstruye fuentes ni bordes y no comprueba importes ni unidades por ti: solo convierte «texto dispuesto en filas y columnas en una página» en «un CSV que otra persona puede conciliar».
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-pdf-table-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-pdf-table-flow-v5-light.svg" width="100%" alt="Estructura de dsh-pdf-table (frontera de dos lados R0/R1 sobre un campo de coordenadas): en el panel R0 de solo lectura, los fragmentos de report.pdf se agrupan en filas con y<=3pt, se dividen en celdas con huecos de x>6pt y sus inicios se agrupan con tolerancia de 18pt en las columnas C1-C4; las filas cortas se rellenan y una fila de un solo bloque se descarta como prosa, dando una rejilla rows[y][x] de 3x4. toCsv() aplica el entrecomillado RFC 4180, el texto cruza la frontera de escritura R1 por safeExportPath (lista blanca de nombre + realpath) hasta $DSH_HOME/dsh-pdf-table/exports/ y vuelve con un recibo sha256">
+</picture>
 
 - **Encaja:** PDF exportados desde Word, Excel o generadores de informes que llevan una capa de texto real; una tabla por página, o páginas que comparten la misma estructura de columnas; pasar una tabla a CSV para conciliar, cargar o archivar.
 - **No encaja:** escaneos, fotos y PDF solo de imagen (sin capa de texto); celdas combinadas, celdas que cruzan páginas, páginas giradas, prosa a dos columnas mezclada con tablas; reconstrucción de fuentes, colores, bordes o fórmulas; sustituir la revisión humana de importes o unidades.
@@ -339,7 +344,7 @@ Versión actual `0.1.0`, 31 pruebas en verde (`node --test test/*.test.mjs`). Pu
 | `samples/quickstart/` | PDF sintético, dorado `expected/result.json` y script de repetición |
 | `docs/assets/` | Diagramas y la salida real de terminal (`quickstart.png` / `quickstart.log`) |
 
-El hero de apertura lo genera [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (biblioteca estándar de Python, SVG puro, texto de tokens de comando, par claro/oscuro) y es reproducible: `python scripts/gen-readme-assets.py`. `docs/assets/quickstart.png` es una captura real que se conserva junto a `docs/assets/quickstart.log`; el antiguo `docs/assets/dsh-pdf-table-flow.svg` de un solo tema se mantiene para que los enlaces viejos no den 404, mientras el README usa el par claro/oscuro.
+El hero de apertura y el diagrama de estructura de «Qué es» los genera [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py): el hero se dibuja con Pillow en `docs/assets/dsh-pdf-table-hero-{zh,en}-{light,dark}.webp` (1440×576) y el diagrama es SVG escrito a mano en `docs/assets/dsh-pdf-table-flow-v5-{light,dark}.svg` (1100×660, solo tokens de comando, compartido por los cinco idiomas). Reproducible con `python scripts/gen-readme-assets.py` (aborta si falta una fuente o si una etiqueta no cabe en su caja). `docs/assets/quickstart.png` es una captura real que se conserva junto a `docs/assets/quickstart.log`; el antiguo `docs/assets/dsh-pdf-table-flow.svg` y su par claro/oscuro se mantienen para que los enlaces viejos no den 404, mientras el README usa el hero y flow-v5.
 
 Topics: `dsh`, `dsh-plugin`, `deepseek-harness`, `deepseek`, `pdf`, `table`, `csv`, `pdfjs`, `perrylink`
 
