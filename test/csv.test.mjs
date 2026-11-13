@@ -35,14 +35,14 @@ test('toCsv joins rows with newlines and keeps a trailing newline', () => {
   )
 })
 
-test('pdf.to_csv writes a quoted CSV, returns path, sha256, bytes and page list', async (t) => {
+test('pdf_to_csv writes a quoted CSV, returns path, sha256, bytes and page list', async (t) => {
   const dir = await tempDir(t)
   const baseDir = path.join(dir, 'store')
   const file = await writePdfBytes(dir, 'report.pdf', await buildReportPdf())
   const local = Object.fromEntries(createTools({ baseDir }).map((tool) => [tool.name, tool]))
-  const extracted = await local['pdf.tables'].execute({ path: file }, exec)
+  const extracted = await local['pdf_tables'].execute({ path: file }, exec)
   const expectedCsv = toCsv(extracted.tables.flatMap((table) => table.rows))
-  const result = await local['pdf.to_csv'].execute({ path: file, filename: 'report.csv' }, exec)
+  const result = await local['pdf_to_csv'].execute({ path: file, filename: 'report.csv' }, exec)
   assert.equal(result.path, path.join(await realpath(baseDir), 'exports', 'report.csv'))
   assert.equal(result.rows, 3)
   assert.equal(result.bytes, Buffer.byteLength(expectedCsv, 'utf8'))
@@ -53,37 +53,37 @@ test('pdf.to_csv writes a quoted CSV, returns path, sha256, bytes and page list'
   assert.match(expectedCsv, /"South, East",90,110,130/)
 })
 
-test('pdf.to_csv exports only the selected page', async (t) => {
+test('pdf_to_csv exports only the selected page', async (t) => {
   const dir = await tempDir(t)
   const file = await writePdfBytes(dir, 'two.pdf', await buildTwoPagePdf())
   const local = Object.fromEntries(createTools({ baseDir: path.join(dir, 'store') }).map((tool) => [tool.name, tool]))
-  const result = await local['pdf.to_csv'].execute({ path: file, pages: [2], filename: 'page2.csv' }, exec)
+  const result = await local['pdf_to_csv'].execute({ path: file, pages: [2], filename: 'page2.csv' }, exec)
   assert.deepEqual(result.pages, [2])
   assert.equal(result.rows, 2)
   assert.equal(await readFile(result.path, 'utf8'), 'Name,Qty\nBolt,7\n')
 })
 
-test('pdf.to_csv uses a hash-derived safe filename by default', async (t) => {
+test('pdf_to_csv uses a hash-derived safe filename by default', async (t) => {
   const dir = await tempDir(t)
   const file = await writePdfBytes(dir, 'report.pdf', await buildReportPdf())
   const local = Object.fromEntries(createTools({ baseDir: path.join(dir, 'store') }).map((tool) => [tool.name, tool]))
-  const result = await local['pdf.to_csv'].execute({ path: file }, exec)
+  const result = await local['pdf_to_csv'].execute({ path: file }, exec)
   assert.match(path.basename(result.path), /^pdf-tables-[0-9a-f]{12}\.csv$/)
 })
 
-test('pdf.to_csv rejects a traversal filename without writing outside exports', async (t) => {
+test('pdf_to_csv rejects a traversal filename without writing outside exports', async (t) => {
   const dir = await tempDir(t)
   const file = await writePdfBytes(dir, 'report.pdf', await buildReportPdf())
   const local = Object.fromEntries(createTools({ baseDir: path.join(dir, 'store') }).map((tool) => [tool.name, tool]))
-  await assert.rejects(() => local['pdf.to_csv'].execute({ path: file, filename: '../evil.csv' }, exec), /E_PDF_PATH_INVALID/)
-  await assert.rejects(() => local['pdf.to_csv'].execute({ path: file, filename: '/tmp/evil.csv' }, exec), /E_PDF_PATH_INVALID/)
+  await assert.rejects(() => local['pdf_to_csv'].execute({ path: file, filename: '../evil.csv' }, exec), /E_PDF_PATH_INVALID/)
+  await assert.rejects(() => local['pdf_to_csv'].execute({ path: file, filename: '/tmp/evil.csv' }, exec), /E_PDF_PATH_INVALID/)
 })
 
-test('pdf.to_csv writes an empty file when the PDF has text but no table rows', async (t) => {
+test('pdf_to_csv writes an empty file when the PDF has text but no table rows', async (t) => {
   const dir = await tempDir(t)
   const file = await writePdfBytes(dir, 'prose.pdf', await buildProseOnlyPdf())
   const local = Object.fromEntries(createTools({ baseDir: path.join(dir, 'store') }).map((tool) => [tool.name, tool]))
-  const result = await local['pdf.to_csv'].execute({ path: file, filename: 'empty.csv' }, exec)
+  const result = await local['pdf_to_csv'].execute({ path: file, filename: 'empty.csv' }, exec)
   assert.equal(result.rows, 0)
   assert.equal(result.bytes, 0)
   assert.equal(result.sha256, sha256(''))

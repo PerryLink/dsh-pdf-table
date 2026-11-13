@@ -9,7 +9,7 @@
 
 **Transforme a tabela de um PDF com camada de texto em linhas e colunas e exporte um CSV que dá para conferir.**
 
-Extrator de tabelas de PDF totalmente local para o DeepSeek Harness: `pdf.inspect` verifica se existe camada de texto, `pdf.tables` reconstrói linhas e colunas a partir das coordenadas e `pdf.to_csv` grava um CSV com aspas — sem rede, sem chamada ao modelo, sem upload e sem OCR.
+Extrator de tabelas de PDF totalmente local para o DeepSeek Harness: `pdf_inspect` verifica se existe camada de texto, `pdf_tables` reconstrói linhas e colunas a partir das coordenadas e `pdf_to_csv` grava um CSV com aspas — sem rede, sem chamada ao modelo, sem upload e sem OCR.
 
 [Instalar](#instalação-em-três-passos) · [Configuração](#configuração) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
@@ -45,9 +45,9 @@ Em uma frase: lê a **camada de texto** de um PDF local, reconstrói a tabela a 
 - **Não serve:** digitalizações, fotos e PDFs só de imagem (sem camada de texto); células mescladas, células que cruzam páginas, páginas giradas, prosa em duas colunas misturada com tabelas; reconstrução de fontes, cores, bordas ou fórmulas; substituir a conferência humana de valores ou unidades.
 
 ```text
-report.pdf ──pdf.inspect──▶ pages · chars_per_page · has_text_layer      (R0 somente leitura)
-           ──pdf.tables──▶  rows[y][x]: y a 3pt = linha, vão de x > 6pt = célula  (R0 somente leitura)
-           ──pdf.to_csv──▶  exports/*.csv + sha256 (escape RFC 4180)       (R1 escrita local)
+report.pdf ──pdf_inspect──▶ pages · chars_per_page · has_text_layer      (R0 somente leitura)
+           ──pdf_tables──▶  rows[y][x]: y a 3pt = linha, vão de x > 6pt = célula  (R0 somente leitura)
+           ──pdf_to_csv──▶  exports/*.csv + sha256 (escape RFC 4180)       (R1 escrita local)
 ```
 
 As três ferramentas formam um único pipeline local: sem OCR, sem requisição de rede, sem chamada ao modelo e com o PDF original somente leitura do começo ao fim.
@@ -92,18 +92,18 @@ Os nomes das ferramentas são API estável; as descrições ficam em inglês par
 
 | Ferramenta | Uso | Risco |
 |---|---|---|
-| `pdf.inspect` | Número de páginas, caracteres de texto por página e presença de camada de texto; sem camada de texto lança `E_PDF_NO_TEXT_LAYER` | R0 |
-| `pdf.tables` | Agrupa itens por y em linhas e por vãos de x em colunas; devolve `{ page, rows }` por página | R0 |
-| `pdf.to_csv` | Grava o CSV com aspas e devolve caminho + sha256 | R1 escrita local |
+| `pdf_inspect` | Número de páginas, caracteres de texto por página e presença de camada de texto; sem camada de texto lança `E_PDF_NO_TEXT_LAYER` | R0 |
+| `pdf_tables` | Agrupa itens por y em linhas e por vãos de x em colunas; devolve `{ page, rows }` por página | R0 |
+| `pdf_to_csv` | Grava o CSV com aspas e devolve caminho + sha256 | R1 escrita local |
 
 - **Agrupamento por coordenadas da camada de texto** — itens no mesmo y (≤3pt) formam uma linha, vãos de x acima de 6pt abrem uma célula nova e os inícios de célula são agrupados em colunas com tolerância de 18pt; linhas com um único bloco de texto são tratadas como prosa e descartadas.
-- **Dois níveis de risco** — `pdf.inspect` e `pdf.tables` são R0 (somente leitura); `pdf.to_csv` é R1 (escrita local) e sempre grava sob `$DSH_HOME/dsh-pdf-table/exports/`.
+- **Dois níveis de risco** — `pdf_inspect` e `pdf_tables` são R0 (somente leitura); `pdf_to_csv` é R1 (escrita local) e sempre grava sob `$DSH_HOME/dsh-pdf-table/exports/`.
 - **Caminho de exportação controlado** — o nome do arquivo precisa casar com `[A-Za-z0-9._-]{1,120}`; `../`, separadores de caminho e fuga por link simbólico são rejeitados (`E_PDF_PATH_INVALID` / `E_PDF_PATH_NOT_ALLOWED`).
 - **Escape de aspas no CSV** — campos com vírgula, aspas duplas, CR ou LF são envolvidos em aspas e as aspas internas são duplicadas (RFC 4180).
-- **Recibo sha256** — `pdf.to_csv` devolve caminho, `sha256`, número de linhas, bytes e as páginas realmente exportadas, para conferência item a item.
+- **Recibo sha256** — `pdf_to_csv` devolve caminho, `sha256`, número de linhas, bytes e as páginas realmente exportadas, para conferência item a item.
 - **Erros com o próximo passo** — nove códigos `E_PDF_*` estáveis, no formato `<uma frase humana>（E_PDF_XXX）｜下一步：<uma ação>`; veja «Códigos de erro».
 
-### Regras de linhas e colunas do `pdf.tables`
+### Regras de linhas e colunas do `pdf_tables`
 
 1. Itens só com espaço são descartados e a ordenação é por y decrescente; itens a ≤3pt compartilham a linha.
 2. Cada linha é ordenada por x; vão acima de 6pt abre célula nova, vãos menores são fundidos.
@@ -114,16 +114,16 @@ Os nomes das ferramentas são API estável; as descrições ficam em inglês par
 
 ## Entrada
 
-- Caminho local de um `.pdf`. O arquivo precisa ter camada de texto; em dúvida, rode `pdf.inspect` antes.
+- Caminho local de um `.pdf`. O arquivo precisa ter camada de texto; em dúvida, rode `pdf_inspect` antes.
 - Um arquivo de até cerca de 50 MB é um limite local razoável (recomendação, não um limiar fixo no código). `pages` seleciona páginas com base 1.
 - O PDF é somente leitura e nunca é modificado.
 - **PDFs digitalizados não são suportados**: a ausência de camada de texto lança `E_PDF_NO_TEXT_LAYER` e pede OCR.
 
 ## Saída
 
-- `pdf.inspect`: `{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`.
-- `pdf.tables`: `{ tables: [{ page, rows: string[][] }], rows }`; itens no mesmo y formam uma linha, vãos de x definem colunas e o texto das células é aparado.
-- `pdf.to_csv`: `{ path, sha256, rows, bytes, pages }`. O arquivo vai para `$DSH_HOME/dsh-pdf-table/exports/` com o nome padrão `pdf-tables-<12 primeiros caracteres do sha256>.csv`; o PDF original não é tocado.
+- `pdf_inspect`: `{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`.
+- `pdf_tables`: `{ tables: [{ page, rows: string[][] }], rows }`; itens no mesmo y formam uma linha, vãos de x definem colunas e o texto das células é aparado.
+- `pdf_to_csv`: `{ path, sha256, rows, bytes, pages }`. O arquivo vai para `$DSH_HOME/dsh-pdf-table/exports/` com o nome padrão `pdf-tables-<12 primeiros caracteres do sha256>.csv`; o PDF original não é tocado.
 
 ## Exemplo
 
@@ -170,13 +170,13 @@ Chamadas na superfície de ferramentas:
 
 ```sh
 # 1) número de páginas e camada de texto
-#    superfície: pdf.inspect({ path: "/abs/path/report.pdf" })
+#    superfície: pdf_inspect({ path: "/abs/path/report.pdf" })
 
 # 2) extrair as linhas da tabela
-#    superfície: pdf.tables({ path: "/abs/path/report.pdf", pages: [1] })
+#    superfície: pdf_tables({ path: "/abs/path/report.pdf", pages: [1] })
 
 # 3) exportar CSV
-#    superfície: pdf.to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
+#    superfície: pdf_to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
 ```
 
 ## Configuração
@@ -185,12 +185,12 @@ Este plugin **não tem chaves Config**: depois de montado, tudo está disponíve
 
 | Ferramenta | Argumento | Obrigatório | Significado |
 |---|---|---|---|
-| `pdf.inspect` | `path` | sim | Caminho absoluto do PDF a inspecionar |
-| `pdf.tables` | `path` | sim | Caminho absoluto do PDF a extrair |
-| `pdf.tables` | `pages` | não | Array de páginas com base 1; omitido = todas; array vazio ou página fora do intervalo lança `E_PDF_PAGE_RANGE` |
-| `pdf.to_csv` | `path` | sim | Caminho absoluto do PDF a exportar |
-| `pdf.to_csv` | `pages` | não | Igual ao acima |
-| `pdf.to_csv` | `filename` | não | Nome de exportação, apenas `[A-Za-z0-9._-]{1,120}`; padrão `pdf-tables-<12 primeiros caracteres do sha256>.csv` |
+| `pdf_inspect` | `path` | sim | Caminho absoluto do PDF a inspecionar |
+| `pdf_tables` | `path` | sim | Caminho absoluto do PDF a extrair |
+| `pdf_tables` | `pages` | não | Array de páginas com base 1; omitido = todas; array vazio ou página fora do intervalo lança `E_PDF_PAGE_RANGE` |
+| `pdf_to_csv` | `path` | sim | Caminho absoluto do PDF a exportar |
+| `pdf_to_csv` | `pages` | não | Igual ao acima |
+| `pdf_to_csv` | `filename` | não | Nome de exportação, apenas `[A-Za-z0-9._-]{1,120}`; padrão `pdf-tables-<12 primeiros caracteres do sha256>.csv` |
 
 Raiz de escrita local: `$DSH_HOME/dsh-pdf-table` (exporta para o `exports/` dela). Em testes dá para sobrescrever com `DSH_PDF_TABLE_HOME`; se `DSH_HOME` não estiver definida, o plugin usa o diretório de trabalho atual (`process.cwd()/dsh-pdf-table`) — *Observed from `src/plugin/index.ts:9-14`*.
 
@@ -199,14 +199,14 @@ Raiz de escrita local: `$DSH_HOME/dsh-pdf-table` (exporta para o `exports/` dela
 <details>
 <summary>Dá para ler um PDF digitalizado?</summary>
 
-Não. Este pacote lê a camada de texto e **não faz OCR**. PDF só de imagem falha com `E_PDF_NO_TEXT_LAYER`; passe primeiro por OCR e rode `pdf.inspect` de novo para confirmar que `total_chars > 0`.
+Não. Este pacote lê a camada de texto e **não faz OCR**. PDF só de imagem falha com `E_PDF_NO_TEXT_LAYER`; passe primeiro por OCR e rode `pdf_inspect` de novo para confirmar que `total_chars > 0`.
 
 </details>
 
 <details>
 <summary>Por que uma coluna é unida ou separada?</summary>
 
-Primeiro rode `node samples/quickstart/run.mjs --check` para descartar problema de ambiente. As colunas vêm dos vãos de x entre itens: vãos estreitos, vários itens dentro de uma célula ou duas tabelas com layouts diferentes na mesma página podem unir ou separar colunas. Confira as `rows` de `pdf.tables` e use `pages` para exportar uma página de cada vez quando precisar.
+Primeiro rode `node samples/quickstart/run.mjs --check` para descartar problema de ambiente. As colunas vêm dos vãos de x entre itens: vãos estreitos, vários itens dentro de uma célula ou duas tabelas com layouts diferentes na mesma página podem unir ou separar colunas. Confira as `rows` de `pdf_tables` e use `pages` para exportar uma página de cada vez quando precisar.
 
 </details>
 
@@ -234,7 +234,7 @@ Cada chamada lê o PDF na memória e analisa a camada de texto com o pdfjs-dist 
 ## Limites de segurança
 
 - **O PDF original é somente leitura.** `openPdf` só lê os bytes e calcula o `sha256`; nenhum caminho, com sucesso ou erro, regrava o arquivo de origem.
-- **Uma única superfície de escrita.** `pdf.to_csv` sempre grava em `$DSH_HOME/dsh-pdf-table/exports/`; o nome passa por uma lista branca e o caminho resolvido é reconferido com `realpath`, então um link simbólico não consegue tirar a escrita do diretório de exportação.
+- **Uma única superfície de escrita.** `pdf_to_csv` sempre grava em `$DSH_HOME/dsh-pdf-table/exports/`; o nome passa por uma lista branca e o caminho resolvido é reconferido com `realpath`, então um link simbólico não consegue tirar a escrita do diretório de exportação.
 - **Sem rede e sem modelo.** A análise acontece dentro do processo (pdfjs-dist `5.4.394`): sem fetch, sem serviço externo e sem chamada ao modelo.
 - **Falha fechada.** Falta de camada de texto, arquivo corrompido, arquivo vazio, criptografia, páginas fora do intervalo e falhas de escrita lançam um código estável com o próximo passo, em vez de devolver tabela vazia em silêncio.
 - **Registro é efeito.** As três ferramentas são registradas em `apply()` e removidas ao parar ou recarregar a quente.
@@ -246,7 +246,7 @@ Escrita: apenas `$DSH_HOME/dsh-pdf-table/exports/` (saída CSV); o PDF original 
 Rede: não.
 Sistemas externos: nenhum.
 
-`pdf.inspect` e `pdf.tables` são **R0** (somente leitura); `pdf.to_csv` é **R1** (escrita local, apenas sob `$DSH_HOME/dsh-pdf-table/exports/`). `DSH_PDF_TABLE_HOME` pode sobrescrever a raiz de escrita local em testes; por padrão é exatamente `$DSH_HOME/dsh-pdf-table`.
+`pdf_inspect` e `pdf_tables` são **R0** (somente leitura); `pdf_to_csv` é **R1** (escrita local, apenas sob `$DSH_HOME/dsh-pdf-table/exports/`). `DSH_PDF_TABLE_HOME` pode sobrescrever a raiz de escrita local em testes; por padrão é exatamente `$DSH_HOME/dsh-pdf-table`.
 
 ## Códigos de erro
 
@@ -258,7 +258,7 @@ Sistemas externos: nenhum.
 | `E_PDF_CORRUPT` | Arquivo truncado ou incompleto, ou um `.pdf` que não é PDF | Abra em um leitor e salve uma cópia nova; tente de novo |
 | `E_PDF_ENCRYPTED` | Protegido por senha, a camada de texto não é legível | Exporte uma cópia sem senha com a senha de proprietário (este pacote nunca adivinha senhas) |
 | `E_PDF_NO_TEXT_LAYER` | PDF digitalizado ou só de imagem, sem caracteres extraíveis | Faça OCR para um PDF com texto e rode de novo |
-| `E_PDF_PAGE_RANGE` | `pages` vazio, não inteiro positivo, fora do intervalo ou com página inválida | Comece em 1 e use o `pages` devolvido por `pdf.inspect` |
+| `E_PDF_PAGE_RANGE` | `pages` vazio, não inteiro positivo, fora do intervalo ou com página inválida | Comece em 1 e use o `pages` devolvido por `pdf_inspect` |
 | `E_PDF_PATH_NOT_ALLOWED` | O caminho de exportação escapa de `exports/` (também após realpath) | Passe apenas um nome de arquivo, sem `../`, separadores ou links simbólicos |
 | `E_PDF_EXPORT_FAILED` | Falha de escrita local: diretório sem permissão, disco cheio etc. | Confirme que `$DSH_HOME/dsh-pdf-table` é gravável e tente de novo |
 
@@ -296,7 +296,7 @@ Os fixtures públicos/sintéticos ficam em `samples/quickstart/`; `ACCEPTANCE.cs
 ## Interoperabilidade
 
 - **Depende só do serviço `tools`** (`inject = ['tools']`): o plugin carrega quando o perfil compõe tools e não expõe chaves de serviço, então conflitos de chave de serviço são impossíveis.
-- **Nomes de ferramenta com prefixo `pdf.`**: não ocupa nenhum nome simples embutido. Se outro plugin também registrar ferramentas `pdf.*`, isso sim é colisão real de nomes: confira a superfície de ferramentas com `dsh --profile <profile> --dump-config` antes de instalar.
+- **Nomes de ferramenta com prefixo `pdf_`**: não ocupa nenhum nome simples embutido. Se outro plugin também registrar ferramentas `pdf_*`, isso sim é colisão real de nomes: confira a superfície de ferramentas com `dsh --profile <profile> --dump-config` antes de instalar.
 - **Sem metade de navegador**: o manifesto não declara `dsh.client` (`scripts/lint.mjs` afirma `!pkg.dsh?.client`), então não registra slot de cliente nem disputa assentos de UI.
 - **Sem rotas HTTP**: não registra prefixos `webServer` nem escuta porta alguma.
 - **O patch só insere a si mesmo**: `cordis.patch.yml` tem uma única linha `insert`; nunca sobrescreve linhas embutidas nem altera objetos globais.
@@ -331,7 +331,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-Versão atual `0.1.0`, 31 testes passando (`node --test test/*.test.mjs`). Portão de publicação: `node scripts/gate.mjs` (lint de metadados + todas as linhas públicas de aceitação).
+Versão atual `0.2.0`, 32 testes passando (`node --test test/*.test.mjs`). Portão de publicação: `node scripts/gate.mjs` (lint de metadados + todas as linhas públicas de aceitação).
 
 | Caminho | Conteúdo |
 |---|---|
@@ -339,8 +339,8 @@ Versão atual `0.1.0`, 31 testes passando (`node --test test/*.test.mjs`). Port�
 | `src/core/csv.ts` | Escape de campos RFC 4180 e montagem do CSV |
 | `src/core/safe-path.ts` | Lista branca de nomes e checagem de fuga de diretório |
 | `src/plugin/index.ts` | `resolveBaseDir` (`DSH_PDF_TABLE_HOME` / `DSH_HOME`) e `apply` |
-| `src/plugin/tools.ts` | Superfície de `pdf.inspect` / `pdf.tables` / `pdf.to_csv` |
-| `test/*.test.mjs` | 31 casos de `node --test` (CSV, PDF, caminhos, fumaça do plugin, quickstart) |
+| `src/plugin/tools.ts` | Superfície de `pdf_inspect` / `pdf_tables` / `pdf_to_csv` |
+| `test/*.test.mjs` | 32 casos de `node --test` (CSV, PDF, caminhos, fumaça do plugin, quickstart) |
 | `samples/quickstart/` | PDF sintético, dourado `expected/result.json` e script de repetição |
 | `docs/assets/` | Diagramas e a saída real de terminal (`quickstart.png` / `quickstart.log`) |
 

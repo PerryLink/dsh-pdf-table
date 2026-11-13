@@ -42,11 +42,11 @@ const PDF_HUMAN: Record<PdfTableErrorCode, HumanMessage> = {
   },
   E_PDF_NO_TEXT_LAYER: {
     text: '这份 PDF 没有文本层；这是扫描件，请先 OCR',
-    next: '先用 OCR 工具生成带文本层的 PDF，再运行 pdf.inspect 或 pdf.tables',
+    next: '先用 OCR 工具生成带文本层的 PDF，再运行 pdf_inspect 或 pdf_tables',
   },
   E_PDF_PAGE_RANGE: {
     text: 'pages 里的页码超出范围或不是正整数',
-    next: '页码从 1 开始，按 pdf.inspect 返回的 pages 传入',
+    next: '页码从 1 开始，按 pdf_inspect 返回的 pages 传入',
   },
   E_PDF_PATH_NOT_ALLOWED: {
     text: '导出路径越过了导出目录',

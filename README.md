@@ -9,7 +9,7 @@
 
 **把带文本层的 PDF 里的表格还原成行列，导出成能直接核对的 CSV。**
 
-面向 DeepSeek Harness 的纯本地 PDF 表格抽取工具：`pdf.inspect` 看有没有文本层，`pdf.tables` 按坐标还原行列，`pdf.to_csv` 落成带引号转义的 CSV——不联网、不调用模型、不上传；扫描件不做 OCR。
+面向 DeepSeek Harness 的纯本地 PDF 表格抽取工具：`pdf_inspect` 看有没有文本层，`pdf_tables` 按坐标还原行列，`pdf_to_csv` 落成带引号转义的 CSV——不联网、不调用模型、不上传；扫描件不做 OCR。
 
 [安装](#三步上手) · [配置](#配置) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
@@ -45,9 +45,9 @@ dsh plugin --profile <profile> add dsh-pdf-table
 - **不适合**：扫描件、拍照件、纯图片 PDF（没有文本层）；合并单元格、跨页跨行单元格、旋转页面、双栏/多栏正文混排；需要还原字体、颜色、边框或公式的版式分析；替代人工核对金额/单位。
 
 ```text
-report.pdf ──pdf.inspect──▶ pages · chars_per_page · has_text_layer      （R0 只读）
-           ──pdf.tables──▶  rows[y][x]：y 差 ≤3pt 成行，x 间隔 >6pt 分格   （R0 只读）
-           ──pdf.to_csv──▶  exports/*.csv + sha256（RFC 4180 引号转义）    （R1 本地写）
+report.pdf ──pdf_inspect──▶ pages · chars_per_page · has_text_layer      （R0 只读）
+           ──pdf_tables──▶  rows[y][x]：y 差 ≤3pt 成行，x 间隔 >6pt 分格   （R0 只读）
+           ──pdf_to_csv──▶  exports/*.csv + sha256（RFC 4180 引号转义）    （R1 本地写）
 ```
 
 三个工具构成一条本地流水线：没有 OCR、没有网络请求、没有模型调用，原 PDF 全程只读。
@@ -92,18 +92,18 @@ report.pdf ──pdf.inspect──▶ pages · chars_per_page · has_text_layer 
 
 | 工具 | 用途 | 风险 |
 |---|---|---|
-| `pdf.inspect` | 页数、每页文本字符数、是否有文本层；无文本层报 `E_PDF_NO_TEXT_LAYER` | R0 |
-| `pdf.tables` | 按 y 行聚类 + x 列间隔聚类提取表格，返回每页 `{ page, rows }` | R0 |
-| `pdf.to_csv` | 把提取结果写成带引号转义的 CSV，返回路径与 sha256 | R1 本地写 |
+| `pdf_inspect` | 页数、每页文本字符数、是否有文本层；无文本层报 `E_PDF_NO_TEXT_LAYER` | R0 |
+| `pdf_tables` | 按 y 行聚类 + x 列间隔聚类提取表格，返回每页 `{ page, rows }` | R0 |
+| `pdf_to_csv` | 把提取结果写成带引号转义的 CSV，返回路径与 sha256 | R1 本地写 |
 
 - **文本层坐标聚类** —— 同一 y（≤3pt）的文本项成行，行内 x 间隔 >6pt 分格，全页列起点按 18pt 容差聚类；只有 1 个文本块的行按正文跳过。
-- **两档风险面** —— `pdf.inspect` / `pdf.tables` 是 R0 只读；`pdf.to_csv` 是 R1 本地写，固定落在 `$DSH_HOME/dsh-pdf-table/exports/`。
+- **两档风险面** —— `pdf_inspect` / `pdf_tables` 是 R0 只读；`pdf_to_csv` 是 R1 本地写，固定落在 `$DSH_HOME/dsh-pdf-table/exports/`。
 - **导出路径受控** —— 文件名只允许 `[A-Za-z0-9._-]{1,120}`，`../`、目录分隔符与软链逃逸都会被拒（`E_PDF_PATH_INVALID` / `E_PDF_PATH_NOT_ALLOWED`）。
 - **CSV 引号转义** —— 逗号、双引号、CR/LF 自动整体加引号，内部引号双写（RFC 4180）。
-- **sha256 回执** —— `pdf.to_csv` 返回路径、`sha256`、行数、字节数与实际导出的页码，方便逐项核对。
+- **sha256 回执** —— `pdf_to_csv` 返回路径、`sha256`、行数、字节数与实际导出的页码，方便逐项核对。
 - **报错带下一步** —— 9 个稳定 `E_PDF_*` 错误码，统一格式 `<一句人话>（E_PDF_XXX）｜下一步：<一个动作>`，见「错误码」。
 
-### `pdf.tables` 的行列规则
+### `pdf_tables` 的行列规则
 
 1. 过滤空白文本项后，按 y 从大到小排序；y 差 ≤ 3pt 视为同一行。
 2. 行内按 x 排序；相邻文本项 x 间隔 > 6pt 视为新单元格，否则合并。
@@ -114,16 +114,16 @@ report.pdf ──pdf.inspect──▶ pages · chars_per_page · has_text_layer 
 
 ## 输入
 
-- 格式：本地 `.pdf` 文件路径，文件必须带文本层（可用 `pdf.inspect` 先检查）。
+- 格式：本地 `.pdf` 文件路径，文件必须带文本层（可用 `pdf_inspect` 先检查）。
 - 大小：建议单文件 ≤ 50 MB（这是建议值，不是代码里的硬阈值）；页数不限，`pages` 可按 1-based 页码只选需要的页。
 - 来源：用户自己指定的 PDF；原文件只读，不会被修改。
 - **不支持扫描件**：没有文本层的 PDF 会返回 `E_PDF_NO_TEXT_LAYER`，提示「这是扫描件，请先 OCR」。
 
 ## 输出
 
-- `pdf.inspect`：`{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`。
-- `pdf.tables`：`{ tables: [{ page, rows: string[][] }], rows }`；同一 y 的文本项成行，x 间隔聚类成列，单元格首尾空白会被清理。
-- `pdf.to_csv`：`{ path, sha256, rows, bytes, pages }`；文件写到 `$DSH_HOME/dsh-pdf-table/exports/`，默认文件名 `pdf-tables-<sha256 前 12 位>.csv`，原 PDF 不改。
+- `pdf_inspect`：`{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`。
+- `pdf_tables`：`{ tables: [{ page, rows: string[][] }], rows }`；同一 y 的文本项成行，x 间隔聚类成列，单元格首尾空白会被清理。
+- `pdf_to_csv`：`{ path, sha256, rows, bytes, pages }`；文件写到 `$DSH_HOME/dsh-pdf-table/exports/`，默认文件名 `pdf-tables-<sha256 前 12 位>.csv`，原 PDF 不改。
 
 ## 示例
 
@@ -168,13 +168,13 @@ North,120,135,150
 
 ```sh
 # 1) 看页数与文本层
-#    工具面：pdf.inspect({ path: "/abs/path/report.pdf" })
+#    工具面：pdf_inspect({ path: "/abs/path/report.pdf" })
 
 # 2) 提取表格
-#    工具面：pdf.tables({ path: "/abs/path/report.pdf", pages: [1] })
+#    工具面：pdf_tables({ path: "/abs/path/report.pdf", pages: [1] })
 
 # 3) 导出 CSV
-#    工具面：pdf.to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
+#    工具面：pdf_to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
 ```
 
 ## 配置
@@ -183,12 +183,12 @@ North,120,135,150
 
 | 工具 | 参数 | 必填 | 含义 |
 |---|---|---|---|
-| `pdf.inspect` | `path` | 是 | 待检查 PDF 的绝对路径 |
-| `pdf.tables` | `path` | 是 | 待提取 PDF 的绝对路径 |
-| `pdf.tables` | `pages` | 否 | 1-based 页码数组；不传 = 全部页，传空数组或越界页码报 `E_PDF_PAGE_RANGE` |
-| `pdf.to_csv` | `path` | 是 | 待导出 PDF 的绝对路径 |
-| `pdf.to_csv` | `pages` | 否 | 同上 |
-| `pdf.to_csv` | `filename` | 否 | 导出文件名，只允许 `[A-Za-z0-9._-]{1,120}`；默认 `pdf-tables-<sha256 前 12 位>.csv` |
+| `pdf_inspect` | `path` | 是 | 待检查 PDF 的绝对路径 |
+| `pdf_tables` | `path` | 是 | 待提取 PDF 的绝对路径 |
+| `pdf_tables` | `pages` | 否 | 1-based 页码数组；不传 = 全部页，传空数组或越界页码报 `E_PDF_PAGE_RANGE` |
+| `pdf_to_csv` | `path` | 是 | 待导出 PDF 的绝对路径 |
+| `pdf_to_csv` | `pages` | 否 | 同上 |
+| `pdf_to_csv` | `filename` | 否 | 导出文件名，只允许 `[A-Za-z0-9._-]{1,120}`；默认 `pdf-tables-<sha256 前 12 位>.csv` |
 
 本地写根目录：`$DSH_HOME/dsh-pdf-table`（导出到其下的 `exports/`）。测试可用 `DSH_PDF_TABLE_HOME` 覆盖；`DSH_HOME` 未设置时退回当前工作目录（`process.cwd()/dsh-pdf-table`）——出处 *Observed from `src/plugin/index.ts:9-14`*。
 
@@ -197,14 +197,14 @@ North,120,135,150
 <details>
 <summary>扫描件能用吗？</summary>
 
-不能。本包只读 PDF 的文本层，**不做 OCR**。扫描件（图片型 PDF）会报 `E_PDF_NO_TEXT_LAYER`，请先用 OCR 工具生成带文本层的 PDF，再运行 `pdf.inspect` 确认 `total_chars > 0`。
+不能。本包只读 PDF 的文本层，**不做 OCR**。扫描件（图片型 PDF）会报 `E_PDF_NO_TEXT_LAYER`，请先用 OCR 工具生成带文本层的 PDF，再运行 `pdf_inspect` 确认 `total_chars > 0`。
 
 </details>
 
 <details>
 <summary>表格列数对不上怎么办？</summary>
 
-先跑 `node samples/quickstart/run.mjs --check` 排除环境问题。列边界靠文本项的 x 间隔聚类：如果单元格里有多段文字、列间距很小、或一页里有多张列结构不同的表，可能被合并或拆开。把 `pdf.tables` 的 `rows` 贴出来核对，必要时用 `pages` 只导出一页，或先用 `pdf.tables` 看单页结果再决定是否导出。
+先跑 `node samples/quickstart/run.mjs --check` 排除环境问题。列边界靠文本项的 x 间隔聚类：如果单元格里有多段文字、列间距很小、或一页里有多张列结构不同的表，可能被合并或拆开。把 `pdf_tables` 的 `rows` 贴出来核对，必要时用 `pages` 只导出一页，或先用 `pdf_tables` 看单页结果再决定是否导出。
 
 </details>
 
@@ -232,7 +232,7 @@ North,120,135,150
 ## 安全边界
 
 - **原 PDF 只读。** `openPdf` 只读文件字节并计算 `sha256`，任何成功或失败路径都不会写回源文件。
-- **写面只有一个目录。** `pdf.to_csv` 固定写 `$DSH_HOME/dsh-pdf-table/exports/`；文件名经白名单校验，路径解析后再用 `realpath` 复核，软链不能把写操作引出导出目录。
+- **写面只有一个目录。** `pdf_to_csv` 固定写 `$DSH_HOME/dsh-pdf-table/exports/`；文件名经白名单校验，路径解析后再用 `realpath` 复核，软链不能把写操作引出导出目录。
 - **不联网、不调模型。** 解析全在进程内完成（pdfjs-dist `5.4.394`），没有 fetch、没有外部服务、没有模型调用。
 - **失败关闭。** 无文本层、损坏、空文件、加密、页码越界、导出失败都抛稳定错误码并附带下一步动作，不会静默返回空表。
 - **注册即 effect。** 三个工具在 `apply()` 里注册，停止或热重载即撤销。
@@ -244,7 +244,7 @@ North,120,135,150
 联网：否。
 外部系统：无。
 
-`pdf.inspect`、`pdf.tables` 标 **R0**（只读）；`pdf.to_csv` 标 **R1**（本地写，只写 `$DSH_HOME/dsh-pdf-table` 下的 `exports/`）。可用 `DSH_PDF_TABLE_HOME` 覆盖本地写根目录（测试用），默认严格等于 `$DSH_HOME/dsh-pdf-table`。
+`pdf_inspect`、`pdf_tables` 标 **R0**（只读）；`pdf_to_csv` 标 **R1**（本地写，只写 `$DSH_HOME/dsh-pdf-table` 下的 `exports/`）。可用 `DSH_PDF_TABLE_HOME` 覆盖本地写根目录（测试用），默认严格等于 `$DSH_HOME/dsh-pdf-table`。
 
 ## 错误码
 
@@ -256,7 +256,7 @@ North,120,135,150
 | `E_PDF_CORRUPT` | 截断、下载不完整、扩展名是 `.pdf` 但内容不是 | 用阅读器打开后「另存为」一份新 PDF 再重试 |
 | `E_PDF_ENCRYPTED` | 有密码保护，读不到文本层 | 用拥有者密码导出无密码副本（本包不猜密码） |
 | `E_PDF_NO_TEXT_LAYER` | 扫描件/图片型 PDF，没有可提取字符 | 先 OCR 出带文本层的 PDF，再运行 |
-| `E_PDF_PAGE_RANGE` | `pages` 为空、非正整数、越界，或单页页码非法 | 页码从 1 开始，按 `pdf.inspect` 返回的 `pages` 传入 |
+| `E_PDF_PAGE_RANGE` | `pages` 为空、非正整数、越界，或单页页码非法 | 页码从 1 开始，按 `pdf_inspect` 返回的 `pages` 传入 |
 | `E_PDF_PATH_NOT_ALLOWED` | 导出路径越过 `exports/`（含 realpath 后越界） | 只传文件名，不要带 `../`、目录分隔符或符号链接 |
 | `E_PDF_EXPORT_FAILED` | 导出目录不可写、磁盘满等本地写失败 | 确认 `$DSH_HOME/dsh-pdf-table` 可写后重试 |
 
@@ -294,7 +294,7 @@ North,120,135,150
 ## 互操作性
 
 - **只依赖 `tools` 服务**（`inject = ['tools']`）：profile 组合了 tools 服务才加载；不提供服务键，因此不存在服务键冲突。
-- **工具名带 `pdf.` 前缀**：不占用内置工具的裸名；若另一个插件也注册 `pdf.*` 工具，那就是真实的同名冲突——装之前用 `dsh --profile <profile> --dump-config` 看一眼工具面。
+- **工具名带 `pdf_` 前缀**：不占用内置工具的裸名；若另一个插件也注册 `pdf_*` 工具，那就是真实的同名冲突——装之前用 `dsh --profile <profile> --dump-config` 看一眼工具面。
 - **无客户端半**：manifest 不声明 `dsh.client`（`scripts/lint.mjs` 里有 `!pkg.dsh?.client` 断言），不注册浏览器 slot，也不参与 UI 座位争抢。
 - **无 HTTP 路由**：不注册 `webServer` 前缀，不监听端口。
 - **patch 只插入自己**：`cordis.patch.yml` 只有一条 `insert`，不覆写内置行，也不改全局对象。
@@ -329,7 +329,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-当前版本 `0.1.0`，31 项测试通过（`node --test test/*.test.mjs`）。发布门禁：`node scripts/gate.mjs`（元数据 lint + 公开验收行全过）。
+当前版本 `0.2.0`，32 项测试通过（`node --test test/*.test.mjs`）。发布门禁：`node scripts/gate.mjs`（元数据 lint + 公开验收行全过）。
 
 | 路径 | 内容 |
 |---|---|
@@ -337,8 +337,8 @@ node scripts/gate.mjs
 | `src/core/csv.ts` | RFC 4180 字段转义与 CSV 拼装 |
 | `src/core/safe-path.ts` | 导出文件名白名单与目录逃逸校验 |
 | `src/plugin/index.ts` | `resolveBaseDir`（`DSH_PDF_TABLE_HOME` / `DSH_HOME`）与 `apply` |
-| `src/plugin/tools.ts` | `pdf.inspect` / `pdf.tables` / `pdf.to_csv` 三个工具面 |
-| `test/*.test.mjs` | 31 项 `node --test`（CSV、PDF、路径、插件冒烟、quickstart） |
+| `src/plugin/tools.ts` | `pdf_inspect` / `pdf_tables` / `pdf_to_csv` 三个工具面 |
+| `test/*.test.mjs` | 32 项 `node --test`（CSV、PDF、路径、插件冒烟、quickstart） |
 | `samples/quickstart/` | 合成 PDF、金标 `expected/result.json` 与复跑脚本 |
 | `docs/assets/` | 配图与真实终端输出（`quickstart.png` / `quickstart.log`） |
 

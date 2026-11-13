@@ -16,7 +16,7 @@ const sha256 = (value: string | Buffer) => createHash('sha256').update(value).di
 
 export function createTools(deps: ToolDeps) {
   const inspect = defineTool({
-    name: 'pdf.inspect',
+    name: 'pdf_inspect',
     description: 'Inspect a text-based PDF: page count, text characters per page, and whether it has a text layer. No OCR; a scanned PDF fails with E_PDF_NO_TEXT_LAYER.',
     parameters: { path: { type: 'string', required: true } },
     output: {
@@ -39,7 +39,7 @@ export function createTools(deps: ToolDeps) {
   })
 
   const tables = defineTool({
-    name: 'pdf.tables',
+    name: 'pdf_tables',
     description: 'Extract table rows from a text-based PDF. Text items on the same y form a row; x gaps define columns. Returns { page, rows } per selected page (pages are 1-based, default all). No OCR.',
     parameters: {
       path: { type: 'string', required: true },
@@ -79,7 +79,7 @@ export function createTools(deps: ToolDeps) {
   })
 
   const exportCsv = defineTool({
-    name: 'pdf.to_csv',
+    name: 'pdf_to_csv',
     description: 'Extract table rows from a text-based PDF and write one quoted CSV under $DSH_HOME/dsh-pdf-table/exports; returns the path and sha256. No OCR; scanned PDFs fail with E_PDF_NO_TEXT_LAYER.',
     parameters: {
       path: { type: 'string', required: true },
