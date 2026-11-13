@@ -7,9 +7,9 @@ Outputs (idempotent overwrite):
 
 What the drawings are derived from (read before writing, never invented):
 
-  src/plugin/tools.ts   pdf.inspect -> { pages, chars_per_page, total_chars,
-                        has_text_layer, pages_without_text }; pdf.tables -> { tables:
-                        [{ page, rows }], rows }; pdf.to_csv -> toCsv(rows) ->
+  src/plugin/tools.ts   pdf_inspect -> { pages, chars_per_page, total_chars,
+                        has_text_layer, pages_without_text }; pdf_tables -> { tables:
+                        [{ page, rows }], rows }; pdf_to_csv -> toCsv(rows) ->
                         safeExportPath($DSH_HOME/dsh-pdf-table/exports, filename) ->
                         writeFile -> { path, sha256, rows, bytes, pages }.
   src/core/pdf.ts       ROW_TOLERANCE=3 (items within 3pt share a row), CELL_GAP=6
@@ -183,7 +183,7 @@ HERO = {
         title="dsh-pdf-table",
         value=["把 PDF 的文本层还原成行列，导出 CSV",
                "不 OCR、不联网、不调模型，原 PDF 只读"],
-        sub="pdf.inspect → pdf.tables → pdf.to_csv · RFC 4180 引号转义",
+        sub="pdf_inspect → pdf_tables → pdf_to_csv · RFC 4180 引号转义",
         meta="R0 只读 ×2 · R1 本地写 ×1 · 只写 exports/ · pdfjs-dist 5.4.394",
         foot="Apache-2.0 · github.com/PerryLink/dsh-pdf-table · Node ≥24.9",
         panel_title="坐标 → 行列",
@@ -191,7 +191,7 @@ HERO = {
         panel_rule="Δy ≤3pt 成行 · Δx >6pt 分格 · 列起点 18pt",
         panel_call='"South, East" · 逗号 → 整格加引号',
         panel_note="行按 y 归并，列按起点聚类；短行补空串",
-        out_title="pdf.to_csv → exports/",
+        out_title="pdf_to_csv → exports/",
         out_last="只读解析，不写回原 PDF",
         out_risk="R1 · $DSH_HOME/dsh-pdf-table/exports/",
     ),
@@ -200,7 +200,7 @@ HERO = {
         title="dsh-pdf-table",
         value=["Turn a PDF text layer into rows and columns",
                "Offline CSV you can check cell by cell"],
-        sub="pdf.inspect → pdf.tables → pdf.to_csv · RFC 4180 quoting",
+        sub="pdf_inspect → pdf_tables → pdf_to_csv · RFC 4180 quoting",
         meta="R0 read-only ×2 · R1 local write ×1 · exports/ only · pdfjs-dist 5.4.394",
         foot="Apache-2.0 · github.com/PerryLink/dsh-pdf-table · Node ≥24.9",
         panel_title="coordinates → rows",
@@ -208,7 +208,7 @@ HERO = {
         panel_rule="Δy ≤3pt rows · Δx >6pt cells · 18pt columns",
         panel_call='"South, East" · comma → quoted',
         panel_note="rows merged by y, columns by start; short rows padded",
-        out_title="pdf.to_csv → exports/",
+        out_title="pdf_to_csv → exports/",
         out_last="parse only — never writes back",
         out_risk="R1 · $DSH_HOME/dsh-pdf-table/exports/",
     ),
@@ -354,10 +354,10 @@ FLOW_TEXT = dict(
     meta1="R0 read-only ×2 · R1 local write ×1",
     meta2="pdfjs-dist 5.4.394 · Node ≥24.9",
     r0tab="R0 · read-only",
-    r0sub="pdf.tables · items → rows (Δy ≤3pt) → cells (Δx >6pt) → columns (18pt tol)",
+    r0sub="pdf_tables · items → rows (Δy ≤3pt) → cells (Δx >6pt) → columns (18pt tol)",
     page_file="report.pdf",
     page_meta="table-demo.pdf · 1 page",
-    page_inspect="pdf.inspect",
+    page_inspect="pdf_inspect",
     page_stamp="text layer: yes · 138 chars",
     legend="Δy ≤3pt → row · Δx >6pt → cell · column start 18pt",
     prose="1 block → dropped",
@@ -378,7 +378,7 @@ FLOW_TEXT = dict(
     gate_bad1="unsafe name → E_PDF_PATH_INVALID",
     gate_bad2="../x.csv → E_PDF_PATH_NOT_ALLOWED",
     csv_title="toCsv() · RFC 4180",
-    csv_sub="pdf.to_csv · builds the text",
+    csv_sub="pdf_to_csv · builds the text",
     csv_chip="quoted",
     csv_note1=', → "…"   ·   " → ""',
     csv_note2="3 rows · 4 cols · 71 bytes",

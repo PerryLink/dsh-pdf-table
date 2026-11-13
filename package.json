@@ -1,6 +1,6 @@
 {
   "name": "dsh-pdf-table",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Extract text-layer tables from a PDF and export CSV; no OCR, scanned PDFs are not supported.",
   "type": "module",
   "main": "./lib/plugin/index.js",

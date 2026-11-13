@@ -6,7 +6,7 @@
     <text x="134" y="128" text-anchor="middle" fill="#9fb3d9">text layer only</text>
 
     <rect x="362" y="70" width="196" height="80" rx="14" fill="#141b30" stroke="#6ea8fe" stroke-width="2"/>
-    <text x="460" y="104" text-anchor="middle" font-weight="700">pdf.tables</text>
+    <text x="460" y="104" text-anchor="middle" font-weight="700">pdf_tables</text>
     <text x="460" y="128" text-anchor="middle" fill="#9fb3d9">y rows · x-gap columns</text>
 
     <rect x="688" y="70" width="196" height="80" rx="14" fill="#141b30" stroke="#3fb950" stroke-width="2"/>

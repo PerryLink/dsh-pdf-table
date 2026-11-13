@@ -5,15 +5,15 @@
 
 ## 1. 扫描件没有文本层（E_PDF_NO_TEXT_LAYER）
 
-- **症状**：`这份 PDF 没有文本层；这是扫描件，请先 OCR（E_PDF_NO_TEXT_LAYER）｜下一步：先用 OCR 工具生成带文本层的 PDF，再运行 pdf.inspect 或 pdf.tables`
+- **症状**：`这份 PDF 没有文本层；这是扫描件，请先 OCR（E_PDF_NO_TEXT_LAYER）｜下一步：先用 OCR 工具生成带文本层的 PDF，再运行 pdf_inspect 或 pdf_tables`
 - **原因**：PDF 只有页面图片，没有可选中的文字；本包不做 OCR，也不下载 OCR 模型。
-- **动作**：先用 OCR 工具（本地或你信任的服务）生成带文本层的 PDF，再用 `pdf.inspect` 确认 `total_chars > 0`；确认后再跑 `pdf.tables` / `pdf.to_csv`。
+- **动作**：先用 OCR 工具（本地或你信任的服务）生成带文本层的 PDF，再用 `pdf_inspect` 确认 `total_chars > 0`；确认后再跑 `pdf_tables` / `pdf_to_csv`。
 
 ## 2. 文件打不开（E_PDF_CORRUPT）
 
 - **症状**：`这个 PDF 打不开，文件可能损坏或被截断（E_PDF_CORRUPT）｜下一步：先用 PDF 阅读器确认文件能正常打开，再重新导出一次`
 - **原因**：文件被截断、下载不完整、扩展名是 `.pdf` 但内容不是 PDF，或 PDF 结构非法。
-- **动作**：用系统 PDF 阅读器打开一次；能打开就从阅读器“另存为”一份新 PDF，再重试。仍失败请附上文件大小和 `pdf.inspect` 的完整报错行。
+- **动作**：用系统 PDF 阅读器打开一次；能打开就从阅读器“另存为”一份新 PDF，再重试。仍失败请附上文件大小和 `pdf_inspect` 的完整报错行。
 
 ## 3. 空文件（E_PDF_EMPTY）
 
@@ -23,9 +23,9 @@
 
 ## 4. 页码不对（E_PDF_PAGE_RANGE）
 
-- **症状**：`pages 里的页码超出范围或不是正整数（E_PDF_PAGE_RANGE）｜下一步：页码从 1 开始，按 pdf.inspect 返回的 pages 传入`
+- **症状**：`pages 里的页码超出范围或不是正整数（E_PDF_PAGE_RANGE）｜下一步：页码从 1 开始，按 pdf_inspect 返回的 pages 传入`
 - **原因**：传了 `0`、负数、小数、超过页数的值，或传了空数组。
-- **动作**：先跑 `pdf.inspect` 拿到 `pages`，再传 `[1]`、`[2,3]` 这样的 1-based 正整数；不传 `pages` 表示全部页。
+- **动作**：先跑 `pdf_inspect` 拿到 `pages`，再传 `[1]`、`[2,3]` 这样的 1-based 正整数；不传 `pages` 表示全部页。
 
 ## 5. 导出文件名不安全（E_PDF_PATH_INVALID / E_PDF_PATH_NOT_ALLOWED）
 
@@ -49,9 +49,9 @@
 
 ```sh
 node samples/quickstart/run.mjs --check   # 自带样例必须通过
-node --test test/*.test.mjs               # 31 项测试
+node --test test/*.test.mjs               # 32 项测试
 node scripts/gate.mjs                     # 元数据 + 验收门
 ```
 
 仍失败时请在 <https://github.com/PerryLink/dsh-pdf-table/issues> 附上：包版本、最小合成 PDF（或生成脚本）、
-`pdf.inspect` / `pdf.tables` 的完整报错行、Node 与 DSH 版本。**不要附真实客户 PDF。**
+`pdf_inspect` / `pdf_tables` 的完整报错行、Node 与 DSH 版本。**不要附真实客户 PDF。**

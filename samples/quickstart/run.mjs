@@ -29,9 +29,9 @@ async function run() {
     const tools = Object.fromEntries(createTools({ baseDir: tempDir }).map((tool) => [tool.name, tool]))
     const exec = { callId: 'quickstart' }
 
-    const inspection = await tools['pdf.inspect'].execute({ path: samplePath }, exec)
-    const extracted = await tools['pdf.tables'].execute({ path: samplePath }, exec)
-    const exported = await tools['pdf.to_csv'].execute({ path: samplePath, filename: 'table-demo.csv' }, exec)
+    const inspection = await tools['pdf_inspect'].execute({ path: samplePath }, exec)
+    const extracted = await tools['pdf_tables'].execute({ path: samplePath }, exec)
+    const exported = await tools['pdf_to_csv'].execute({ path: samplePath, filename: 'table-demo.csv' }, exec)
     const csvText = await readFile(exported.path, 'utf8')
 
     return {

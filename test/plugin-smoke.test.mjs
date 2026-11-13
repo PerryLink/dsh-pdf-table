@@ -10,12 +10,12 @@ import { createTools } from '../lib/plugin/tools.js'
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const samplePath = path.join(packageRoot, 'samples', 'quickstart', 'input', 'table-demo.pdf')
 
-test('createTools exposes the three pdf.* tools with unique names', () => {
+test('createTools exposes the three pdf_* tools with unique names', () => {
   const tools = createTools({ baseDir: path.join(os.tmpdir(), 'dsh-pdf-table-smoke') })
-  assert.deepEqual(tools.map((tool) => tool.name), ['pdf.inspect', 'pdf.tables', 'pdf.to_csv'])
+  assert.deepEqual(tools.map((tool) => tool.name), ['pdf_inspect', 'pdf_tables', 'pdf_to_csv'])
   assert.equal(new Set(tools.map((tool) => tool.name)).size, 3)
   for (const tool of tools) {
-    assert.ok(tool.name.startsWith('pdf.'))
+    assert.ok(tool.name.startsWith('pdf_'))
     assert.ok(tool.description.length > 0)
     assert.equal(typeof tool.execute, 'function')
     assert.equal(typeof tool.output.render, 'function')
@@ -46,7 +46,7 @@ test('apply() registers the tools and wires the documented write root', async (t
   assert.deepEqual(plugin.inject, ['tools'])
   assert.equal(registered.length, 3)
 
-  const exportCsv = registered.find((tool) => tool.name === 'pdf.to_csv')
+  const exportCsv = registered.find((tool) => tool.name === 'pdf_to_csv')
   const result = await exportCsv.execute({ path: samplePath, filename: 'apply.csv' }, { callId: 'apply' })
   assert.ok(result.path.startsWith(`${dir}${path.sep}exports${path.sep}`), result.path)
   assert.equal(result.rows, 3)

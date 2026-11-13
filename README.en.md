@@ -9,7 +9,7 @@
 
 **Turn the table inside a text-layer PDF into rows and columns, then export a CSV you can reconcile.**
 
-A local-only PDF table extractor for DeepSeek Harness: `pdf.inspect` checks for a text layer, `pdf.tables` rebuilds rows and columns from item coordinates, `pdf.to_csv` writes a quoted CSV — no network, no model call, no upload, and no OCR.
+A local-only PDF table extractor for DeepSeek Harness: `pdf_inspect` checks for a text layer, `pdf_tables` rebuilds rows and columns from item coordinates, `pdf_to_csv` writes a quoted CSV — no network, no model call, no upload, and no OCR.
 
 [Install](#three-step-setup) · [Configuration](#configuration) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
@@ -45,9 +45,9 @@ In one line: it reads the **text layer** of a local PDF, rebuilds the table from
 - **Does not fit:** scans, photos and image-only PDFs (no text layer); merged cells, cells spanning pages, rotated pages, multi-column prose mixed with tables; layout reconstruction of fonts, colours, borders or formulas; replacing a human check of amounts or units.
 
 ```text
-report.pdf ──pdf.inspect──▶ pages · chars_per_page · has_text_layer      (R0 read-only)
-           ──pdf.tables──▶  rows[y][x]: y within 3pt = row, x gap > 6pt = cell  (R0 read-only)
-           ──pdf.to_csv──▶  exports/*.csv + sha256 (RFC 4180 quoting)      (R1 local write)
+report.pdf ──pdf_inspect──▶ pages · chars_per_page · has_text_layer      (R0 read-only)
+           ──pdf_tables──▶  rows[y][x]: y within 3pt = row, x gap > 6pt = cell  (R0 read-only)
+           ──pdf_to_csv──▶  exports/*.csv + sha256 (RFC 4180 quoting)      (R1 local write)
 ```
 
 The three tools form one local pipeline: no OCR, no network request, no model call, and the source PDF stays read-only throughout.
@@ -92,18 +92,18 @@ Tool names are stable API; descriptions stay in English to match runtime output.
 
 | Tool | Purpose | Risk |
 |---|---|---|
-| `pdf.inspect` | Page count, text characters per page, text-layer presence; no text layer raises `E_PDF_NO_TEXT_LAYER` | R0 |
-| `pdf.tables` | Cluster text items by y into rows and x gaps into columns; returns `{ page, rows }` per page | R0 |
-| `pdf.to_csv` | Write quoted CSV and return path + sha256 | R1 local write |
+| `pdf_inspect` | Page count, text characters per page, text-layer presence; no text layer raises `E_PDF_NO_TEXT_LAYER` | R0 |
+| `pdf_tables` | Cluster text items by y into rows and x gaps into columns; returns `{ page, rows }` per page | R0 |
+| `pdf_to_csv` | Write quoted CSV and return path + sha256 | R1 local write |
 
 - **Text-layer coordinate clustering** — items on the same y (within 3pt) form a row, x gaps above 6pt start a new cell, and cell x starts cluster into columns with an 18pt tolerance; rows with a single text block are treated as prose and skipped.
-- **Two risk levels** — `pdf.inspect` and `pdf.tables` are R0 (read-only); `pdf.to_csv` is R1 (local write) and always writes under `$DSH_HOME/dsh-pdf-table/exports/`.
+- **Two risk levels** — `pdf_inspect` and `pdf_tables` are R0 (read-only); `pdf_to_csv` is R1 (local write) and always writes under `$DSH_HOME/dsh-pdf-table/exports/`.
 - **Controlled export path** — the filename must match `[A-Za-z0-9._-]{1,120}`; `../`, path separators and symlink escapes are rejected (`E_PDF_PATH_INVALID` / `E_PDF_PATH_NOT_ALLOWED`).
 - **CSV quote escaping** — fields containing a comma, a double quote, CR or LF are quoted, and embedded quotes are doubled (RFC 4180).
-- **sha256 receipt** — `pdf.to_csv` returns the path, `sha256`, row count, byte count and the pages actually exported, so every field can be checked.
+- **sha256 receipt** — `pdf_to_csv` returns the path, `sha256`, row count, byte count and the pages actually exported, so every field can be checked.
 - **Errors carry the next action** — nine stable `E_PDF_*` codes, each rendered as one human sentence plus one next action; see "Error codes".
 
-### Row/column rules used by `pdf.tables`
+### Row/column rules used by `pdf_tables`
 
 1. Drop whitespace-only items, sort by y descending; items within 3pt share a row.
 2. Sort each row by x; gaps above 6pt start a new cell, smaller gaps merge.
@@ -114,16 +114,16 @@ This is a text-layer heuristic, not a layout-analysis engine; see the limits bel
 
 ## Input
 
-- A local `.pdf` path. The file must have a text layer; run `pdf.inspect` first if unsure.
+- A local `.pdf` path. The file must have a text layer; run `pdf_inspect` first if unsure.
 - A single file up to roughly 50 MB is a sensible local limit (a recommendation, not a hard threshold in code). `pages` selects 1-based pages.
 - The PDF is read-only and never modified.
 - **Scanned PDFs are not supported**: a missing text layer raises `E_PDF_NO_TEXT_LAYER` and asks for OCR.
 
 ## Output
 
-- `pdf.inspect`: `{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`.
-- `pdf.tables`: `{ tables: [{ page, rows: string[][] }], rows }`; items on the same y form a row, x gaps define columns, and cell text is trimmed.
-- `pdf.to_csv`: `{ path, sha256, rows, bytes, pages }`. The file goes to `$DSH_HOME/dsh-pdf-table/exports/` with the default name `pdf-tables-<first 12 sha256 chars>.csv`; the source PDF is untouched.
+- `pdf_inspect`: `{ pages, chars_per_page, total_chars, has_text_layer, pages_without_text }`.
+- `pdf_tables`: `{ tables: [{ page, rows: string[][] }], rows }`; items on the same y form a row, x gaps define columns, and cell text is trimmed.
+- `pdf_to_csv`: `{ path, sha256, rows, bytes, pages }`. The file goes to `$DSH_HOME/dsh-pdf-table/exports/` with the default name `pdf-tables-<first 12 sha256 chars>.csv`; the source PDF is untouched.
 
 ## Example
 
@@ -170,13 +170,13 @@ Tool-surface calls:
 
 ```sh
 # 1) page count + text layer
-#    tool surface: pdf.inspect({ path: "/abs/path/report.pdf" })
+#    tool surface: pdf_inspect({ path: "/abs/path/report.pdf" })
 
 # 2) extract table rows
-#    tool surface: pdf.tables({ path: "/abs/path/report.pdf", pages: [1] })
+#    tool surface: pdf_tables({ path: "/abs/path/report.pdf", pages: [1] })
 
 # 3) export CSV
-#    tool surface: pdf.to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
+#    tool surface: pdf_to_csv({ path: "/abs/path/report.pdf", filename: "report.csv" })
 ```
 
 ## Configuration
@@ -185,12 +185,12 @@ This plugin has **no Config keys** — after mounting, everything is available, 
 
 | Tool | Argument | Required | Meaning |
 |---|---|---|---|
-| `pdf.inspect` | `path` | yes | Absolute path of the PDF to inspect |
-| `pdf.tables` | `path` | yes | Absolute path of the PDF to extract |
-| `pdf.tables` | `pages` | no | 1-based page array; omitted = every page; an empty array or out-of-range page raises `E_PDF_PAGE_RANGE` |
-| `pdf.to_csv` | `path` | yes | Absolute path of the PDF to export |
-| `pdf.to_csv` | `pages` | no | Same as above |
-| `pdf.to_csv` | `filename` | no | Export filename, `[A-Za-z0-9._-]{1,120}` only; default `pdf-tables-<first 12 sha256 chars>.csv` |
+| `pdf_inspect` | `path` | yes | Absolute path of the PDF to inspect |
+| `pdf_tables` | `path` | yes | Absolute path of the PDF to extract |
+| `pdf_tables` | `pages` | no | 1-based page array; omitted = every page; an empty array or out-of-range page raises `E_PDF_PAGE_RANGE` |
+| `pdf_to_csv` | `path` | yes | Absolute path of the PDF to export |
+| `pdf_to_csv` | `pages` | no | Same as above |
+| `pdf_to_csv` | `filename` | no | Export filename, `[A-Za-z0-9._-]{1,120}` only; default `pdf-tables-<first 12 sha256 chars>.csv` |
 
 Local write root: `$DSH_HOME/dsh-pdf-table` (exports land in its `exports/`). Tests can override it with `DSH_PDF_TABLE_HOME`; when `DSH_HOME` is unset the plugin falls back to the current working directory (`process.cwd()/dsh-pdf-table`) — *Observed from `src/plugin/index.ts:9-14`*.
 
@@ -199,14 +199,14 @@ Local write root: `$DSH_HOME/dsh-pdf-table` (exports land in its `exports/`). Te
 <details>
 <summary>Can it read a scanned PDF?</summary>
 
-No. This package reads the text layer and **does not OCR**. An image-only PDF fails with `E_PDF_NO_TEXT_LAYER`; OCR it first, then run `pdf.inspect` again and check `total_chars > 0`.
+No. This package reads the text layer and **does not OCR**. An image-only PDF fails with `E_PDF_NO_TEXT_LAYER`; OCR it first, then run `pdf_inspect` again and check `total_chars > 0`.
 
 </details>
 
 <details>
 <summary>Why is a column merged or split?</summary>
 
-First run `node samples/quickstart/run.mjs --check` to rule out an environment problem. Columns come from x gaps between text items: narrow gaps, several text runs inside one cell, or two tables with different layouts on the same page can merge or split columns. Inspect the `rows` from `pdf.tables` and use `pages` to export one page at a time when needed.
+First run `node samples/quickstart/run.mjs --check` to rule out an environment problem. Columns come from x gaps between text items: narrow gaps, several text runs inside one cell, or two tables with different layouts on the same page can merge or split columns. Inspect the `rows` from `pdf_tables` and use `pages` to export one page at a time when needed.
 
 </details>
 
@@ -234,7 +234,7 @@ Every call reads the PDF into memory and parses the text layer with the local pd
 ## Security boundaries
 
 - **The source PDF is read-only.** `openPdf` only reads the bytes and computes `sha256`; no success or failure path writes back to the source file.
-- **One write surface.** `pdf.to_csv` always writes to `$DSH_HOME/dsh-pdf-table/exports/`; the filename passes a whitelist and the resolved path is re-checked through `realpath`, so a symlink cannot redirect the write outside the export directory.
+- **One write surface.** `pdf_to_csv` always writes to `$DSH_HOME/dsh-pdf-table/exports/`; the filename passes a whitelist and the resolved path is re-checked through `realpath`, so a symlink cannot redirect the write outside the export directory.
 - **No network, no model call.** Parsing happens in-process (pdfjs-dist `5.4.394`): no fetch, no external service, no model call.
 - **Fails closed.** No text layer, corrupt file, empty file, encryption, out-of-range pages and write failures all raise a stable error code with a next action instead of silently returning an empty table.
 - **Registration is an effect.** The three tools are registered in `apply()` and removed on stop or hot reload.
@@ -246,7 +246,7 @@ Write: `$DSH_HOME/dsh-pdf-table/exports/` only; the source PDF is not modified.
 Network: no.
 External systems: none.
 
-`pdf.inspect` and `pdf.tables` are **R0** (read-only); `pdf.to_csv` is **R1** (local write, only under `$DSH_HOME/dsh-pdf-table/exports/`). `DSH_PDF_TABLE_HOME` can override the local write root for tests; the default is exactly `$DSH_HOME/dsh-pdf-table`.
+`pdf_inspect` and `pdf_tables` are **R0** (read-only); `pdf_to_csv` is **R1** (local write, only under `$DSH_HOME/dsh-pdf-table/exports/`). `DSH_PDF_TABLE_HOME` can override the local write root for tests; the default is exactly `$DSH_HOME/dsh-pdf-table`.
 
 ## Error codes
 
@@ -258,7 +258,7 @@ External systems: none.
 | `E_PDF_CORRUPT` | Truncated or incomplete file, or a `.pdf` that is not a PDF | Open it in a reader and "save as" a fresh PDF, then retry |
 | `E_PDF_ENCRYPTED` | Password-protected, so the text layer is unreadable | Export a password-free copy with the owner password (this package never guesses passwords) |
 | `E_PDF_NO_TEXT_LAYER` | Scanned/image-only PDF with no extractable characters | OCR it into a text PDF first, then run again |
-| `E_PDF_PAGE_RANGE` | `pages` is empty, not a positive integer, out of range, or an invalid single page | Start at 1 and use the `pages` value returned by `pdf.inspect` |
+| `E_PDF_PAGE_RANGE` | `pages` is empty, not a positive integer, out of range, or an invalid single page | Start at 1 and use the `pages` value returned by `pdf_inspect` |
 | `E_PDF_PATH_NOT_ALLOWED` | The export path escapes `exports/` (also after realpath) | Pass a bare filename without `../`, path separators or symlinks |
 | `E_PDF_EXPORT_FAILED` | Local write failed: unwritable directory, disk full, etc. | Make sure `$DSH_HOME/dsh-pdf-table` is writable, then retry |
 
@@ -296,7 +296,7 @@ Public/synthetic fixtures live in `samples/quickstart/`; `ACCEPTANCE.csv` record
 ## Interoperability
 
 - **Depends on the `tools` service only** (`inject = ['tools']`): the plugin loads when the profile composes tools, and it provides no service keys, so service-key conflicts are impossible.
-- **Tool names carry a `pdf.` prefix**: no bare built-in name is taken. If another plugin also registers `pdf.*` tools, that is a real name collision — check the tool surface with `dsh --profile <profile> --dump-config` before installing.
+- **Tool names carry a `pdf_` prefix**: no bare built-in name is taken. If another plugin also registers `pdf_*` tools, that is a real name collision — check the tool surface with `dsh --profile <profile> --dump-config` before installing.
 - **No browser half**: the manifest declares no `dsh.client` (`scripts/lint.mjs` asserts `!pkg.dsh?.client`), so it registers no client slot and does not compete for UI seats.
 - **No HTTP routes**: it registers no `webServer` prefix and listens on no port.
 - **The patch only inserts itself**: `cordis.patch.yml` has a single `insert` row; it never overwrites built-in rows or mutates globals.
@@ -331,7 +331,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-Current version `0.1.0`, 31 tests pass (`node --test test/*.test.mjs`). Release gate: `node scripts/gate.mjs` (metadata lint + every public acceptance row).
+Current version `0.2.0`, 32 tests pass (`node --test test/*.test.mjs`). Release gate: `node scripts/gate.mjs` (metadata lint + every public acceptance row).
 
 | Path | Contents |
 |---|---|
@@ -339,8 +339,8 @@ Current version `0.1.0`, 31 tests pass (`node --test test/*.test.mjs`). Release 
 | `src/core/csv.ts` | RFC 4180 field escaping and CSV assembly |
 | `src/core/safe-path.ts` | Export filename whitelist and directory-escape checks |
 | `src/plugin/index.ts` | `resolveBaseDir` (`DSH_PDF_TABLE_HOME` / `DSH_HOME`) and `apply` |
-| `src/plugin/tools.ts` | The `pdf.inspect` / `pdf.tables` / `pdf.to_csv` tool surface |
-| `test/*.test.mjs` | 31 `node --test` cases (CSV, PDF, paths, plugin smoke, quickstart) |
+| `src/plugin/tools.ts` | The `pdf_inspect` / `pdf_tables` / `pdf_to_csv` tool surface |
+| `test/*.test.mjs` | 32 `node --test` cases (CSV, PDF, paths, plugin smoke, quickstart) |
 | `samples/quickstart/` | Synthetic PDF, golden `expected/result.json` and the replay script |
 | `docs/assets/` | Diagrams plus the real terminal output (`quickstart.png` / `quickstart.log`) |
 
