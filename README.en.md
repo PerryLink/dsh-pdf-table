@@ -141,6 +141,11 @@ node samples/quickstart/run.mjs --check
 
 Real output (screenshot: [`docs/assets/quickstart.png`](docs/assets/quickstart.png); raw log: [`docs/assets/quickstart.log`](docs/assets/quickstart.log)):
 
+![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
+
+*The animated version of the same run.*
+
+
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
 1 page, 138 text chars; text layer yes

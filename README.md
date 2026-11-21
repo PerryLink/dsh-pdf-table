@@ -139,6 +139,11 @@ node samples/quickstart/run.mjs --check
 
 真实输出（截图见 [`docs/assets/quickstart.png`](docs/assets/quickstart.png)，原始日志见 [`docs/assets/quickstart.log`](docs/assets/quickstart.log)）：
 
+![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
+
+*同一段真实运行的动图版本。*
+
+
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
 1 page, 138 text chars; text layer yes

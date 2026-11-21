@@ -141,6 +141,11 @@ node samples/quickstart/run.mjs --check
 
 वास्तविक आउटपुट (स्क्रीनशॉट: [`docs/assets/quickstart.png`](docs/assets/quickstart.png); लॉग: [`docs/assets/quickstart.log`](docs/assets/quickstart.log)):
 
+![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
+
+*उसी असली रन का एनिमेटेड संस्करण।*
+
+
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
 1 page, 138 text chars; text layer yes
