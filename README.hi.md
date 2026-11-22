@@ -11,6 +11,8 @@
 
 DeepSeek Harness के लिए पूरी तरह स्थानीय PDF तालिका निष्कर्षक: `pdf_inspect` टेक्स्ट-लेयर जाँचता है, `pdf_tables` निर्देशांकों से पंक्तियाँ और स्तंभ बनाता है, और `pdf_to_csv` कोट्स वाला CSV लिखता है — कोई नेटवर्क नहीं, कोई मॉडल कॉल नहीं, कोई अपलोड नहीं, और OCR भी नहीं।
 
+अंतिम सत्यापन: DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
+
 [इंस्टॉल](#तीन-चरणों-में-शुरुआत) · [कॉन्फ़िगरेशन](#कॉन्फ़िगरेशन) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -144,7 +146,6 @@ node samples/quickstart/run.mjs --check
 ![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
 
 *उसी असली रन का एनिमेटेड संस्करण।*
-
 
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
@@ -336,7 +337,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-वर्तमान संस्करण `0.2.0`, 32 परीक्षण पास (`node --test test/*.test.mjs`)। रिलीज़ गेट: `node scripts/gate.mjs` (मेटाडेटा lint + सभी सार्वजनिक स्वीकृति पंक्तियाँ)।
+वर्तमान संस्करण `0.2.1`, 32 परीक्षण पास (`node --test test/*.test.mjs`)। रिलीज़ गेट: `node scripts/gate.mjs` (मेटाडेटा lint + सभी सार्वजनिक स्वीकृति पंक्तियाँ)।
 
 | पथ | सामग्री |
 |---|---|

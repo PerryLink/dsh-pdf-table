@@ -11,6 +11,8 @@
 
 Extrator de tabelas de PDF totalmente local para o DeepSeek Harness: `pdf_inspect` verifica se existe camada de texto, `pdf_tables` reconstrói linhas e colunas a partir das coordenadas e `pdf_to_csv` grava um CSV com aspas — sem rede, sem chamada ao modelo, sem upload e sem OCR.
 
+Última verificação: DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
+
 [Instalar](#instalação-em-três-passos) · [Configuração](#configuração) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -144,7 +146,6 @@ Saída real (captura: [`docs/assets/quickstart.png`](docs/assets/quickstart.png)
 ![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
 
 *A versão animada da mesma execução.*
-
 
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
@@ -336,7 +337,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-Versão atual `0.2.0`, 32 testes passando (`node --test test/*.test.mjs`). Portão de publicação: `node scripts/gate.mjs` (lint de metadados + todas as linhas públicas de aceitação).
+Versão atual `0.2.1`, 32 testes passando (`node --test test/*.test.mjs`). Portão de publicação: `node scripts/gate.mjs` (lint de metadados + todas as linhas públicas de aceitação).
 
 | Caminho | Conteúdo |
 |---|---|

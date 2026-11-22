@@ -11,6 +11,8 @@
 
 A local-only PDF table extractor for DeepSeek Harness: `pdf_inspect` checks for a text layer, `pdf_tables` rebuilds rows and columns from item coordinates, `pdf_to_csv` writes a quoted CSV — no network, no model call, no upload, and no OCR.
 
+Last verified on DeepSeek Harness `dsh-v0.2.3-alpha.1` (2026-11-22).
+
 [Install](#three-step-setup) · [Configuration](#configuration) · [FAQ](#faq) · [简体中文](README.md) · [English](README.en.md) · [Español](README.es.md) · [Português](README.pt.md) · [हिन्दी](README.hi.md)
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-3366CC?style=flat-square&labelColor=2B3245)](LICENSE)
@@ -144,7 +146,6 @@ Real output (screenshot: [`docs/assets/quickstart.png`](docs/assets/quickstart.p
 ![dsh-pdf-table quickstart real terminal output](docs/assets/dsh-pdf-table-demo.gif)
 
 *The animated version of the same run.*
-
 
 ```text
 dsh-pdf-table quickstart - synthetic text-layer PDF (no OCR, not customer data)
@@ -336,7 +337,7 @@ node --test test/*.test.mjs
 node scripts/gate.mjs
 ```
 
-Current version `0.2.0`, 32 tests pass (`node --test test/*.test.mjs`). Release gate: `node scripts/gate.mjs` (metadata lint + every public acceptance row).
+Current version `0.2.1`, 32 tests pass (`node --test test/*.test.mjs`). Release gate: `node scripts/gate.mjs` (metadata lint + every public acceptance row).
 
 | Path | Contents |
 |---|---|
