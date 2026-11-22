@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pdf table",
+    "description": "Turn the table inside a text-layer PDF into rows and columns, then export a CSV you can reconcile."
+  }
+}

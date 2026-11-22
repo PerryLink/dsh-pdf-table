@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pdf table",
+    "description": "面向 DeepSeek Harness 的纯本地 PDF 表格抽取工具：pdfinspect 看有没有文本层，pdftables 按坐标还原行列，pdftocsv 落成带引号转义的 CSV——不联网、不调用模型、不上传；扫描件不做 OCR。"
+  }
+}

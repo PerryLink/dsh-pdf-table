@@ -1,6 +1,6 @@
 {
   "name": "dsh-pdf-table",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Extract text-layer tables from a PDF and export CSV; no OCR, scanned PDFs are not supported.",
   "type": "module",
   "main": "./lib/plugin/index.js",
@@ -9,7 +9,8 @@
     ".": {
       "types": "./lib/plugin/index.d.ts",
       "default": "./lib/plugin/index.js"
-    }
+    },
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
     "lib",
@@ -21,7 +22,9 @@
     "README.hi.md",
     "TROUBLESHOOTING.md",
     "samples",
-    "docs/assets"
+    "docs/assets",
+    "locale/*.json",
+    "icon.svg"
   ],
   "dsh": {
     "bundle": {
@@ -97,5 +100,10 @@
     "@deepseek-ai/dsh-tools": {
       "optional": true
     }
+  },
+  "icon": "icon.svg",
+  "author": {
+    "name": "PerryLink",
+    "url": "https://github.com/PerryLink"
   }
 }
